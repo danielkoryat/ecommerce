@@ -1,0 +1,41 @@
+/backend
+|
+|-- /node_modules               # Node.js modules
+|
+|-- /config                     # Application configuration files
+|   |-- db.js                   # Database configuration
+|   |-- index.js                # Central configuration file to export all settings
+|
+|-- /controllers                # Controllers for handling requests
+|   |-- productController.js    # Handles product-related logic
+|   |-- userController.js       # Handles user-related logic
+|   |-- orderController.js      # Handles order-related logic
+|
+|-- /models                     # Database models
+|   |-- Product.js              # Product model
+|   |-- User.js                 # User model
+|   |-- Order.js                # Order model
+|
+|-- /routes                     # Route definitions
+|   |-- productRoutes.js        # Routes for product operations
+|   |-- userRoutes.js           # Routes for user operations
+|   |-- orderRoutes.js          # Routes for order operations
+|
+|-- /middlewares                # Middlewares for handling requests
+|   |-- authMiddleware.js       # Authentication middleware
+|   |-- errorMiddleware.js      # Error handling middleware
+|
+|-- /utils                      # Utility functions and helpers
+|   |-- apiFeatures.js          # Helper functions for API features like filtering, pagination
+|
+|-- /public                     # Publicly accessible files
+|   |-- /images                 # Image files for products
+|   |-- /css                    # CSS files
+|   |-- /js                     # Front-end JavaScript files
+|
+|-- /views                      # Templates for server-side rendering (if used)
+|
+|-- app.js                      # Main application file
+|-- package.json                # NPM package specification
+|-- .env                        # Environment variables
+|-- .gitignore                  # Specifies intentionally untracked files to ignore
