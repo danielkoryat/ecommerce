@@ -39,3 +39,5 @@
 |-- package.json                # NPM package specification
 |-- .env                        # Environment variables
 |-- .gitignore                  # Specifies intentionally untracked files to ignore
+
+stractureHelper.txt
