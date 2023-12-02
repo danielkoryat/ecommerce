@@ -6,6 +6,11 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   description: {
     type: String,
     required: true,
@@ -16,7 +21,7 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-  stock: {
+  amount: {
     type: Number,
     required: true,
     min: 0,

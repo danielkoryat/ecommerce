@@ -18,6 +18,7 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof CustomeError || isMongooseError(err)) {
     return res.status(400).json({ message: err.message });
   }
-  return res.status(500).json({ message: "Something went wrong" });
+  //return res.status(500).json({ message: "Something went wrong" });
+  return res.status(500).json({ message: err.message });
 };
 export default errorHandler;
