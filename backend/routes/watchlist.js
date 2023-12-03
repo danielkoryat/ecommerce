@@ -1,9 +1,19 @@
 import express from "express";
-import {showItems} from "../controllers/watchlistController.js";
+import {
+  getUserWatchlist,
+  addToWatchlist,
+  removeFromWatchlist
+} from "../controllers/watchlistController.js";
+import cookieJwtAuth from "../middlewares/cookieJwtAuth.js";
+
 
 const router = express.Router();
-router.get("/", showItems);
 
-
+// Protected routes: Only authenticated users can access their watchlist,
+// add to their watchlist, and remove from their watchlist
+router.route("/")
+  .get(cookieJwtAuth, getUserWatchlist)
+  .post(cookieJwtAuth, addToWatchlist)
+  .patch(cookieJwtAuth, removeFromWatchlist);
 
 export default router;
