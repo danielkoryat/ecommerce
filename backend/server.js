@@ -4,11 +4,11 @@ env.config();
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import corsOptionsConfig from "./config/corsOptions.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import notFound from "./middlewares/notFound.js";
-import userRouter from "./routes/user.js";
-import productRouter from "./routes/product.js";
+import corsOptionsConfig from "./src/config/corsOptions.js";
+import errorHandler from "./src/middlewares/errorHandler.js";
+import notFound from "./src/middlewares/notFound.js";
+import userRouter from "./src/routes/user.js";
+import productRouter from "./src/routes/product.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
