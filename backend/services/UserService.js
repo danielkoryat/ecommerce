@@ -24,7 +24,6 @@ class UserService {
     } else {
       throw new customeError("Invalid password", 401);
     }
-    return null;
   }
 
    sanitizeUser = (user) => {

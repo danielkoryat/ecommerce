@@ -8,6 +8,7 @@ import corsOptionsConfig from "./config/corsOptions.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import notFound from "./middlewares/notFound.js";
 import userRouter from "./routes/user.js";
+import productRouter from "./routes/product.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(`${BASE_URL}/user`, userRouter);
+app.use(`${BASE_URL}/product`, productRouter);
 
 app.use(notFound);
 app.use(errorHandler);

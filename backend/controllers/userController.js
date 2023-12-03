@@ -1,8 +1,7 @@
-import User from "../models/User.js";
 import userService from "../services/UserService.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import jwt from "jsonwebtoken";
-import customeError from "../errors/customeError.js"
+import customeError from "../errors/customeError.js";
 
 export const login = asyncWrapper(async (req, res) => {
   const { username, password } = req.body;
@@ -17,6 +16,7 @@ export const login = asyncWrapper(async (req, res) => {
     sameSite: "none",
     secure: true,
   });
+  req.user = user;
 
   return res.status(200).json({ success: true, token });
 });
@@ -24,9 +24,8 @@ export const login = asyncWrapper(async (req, res) => {
 export const signup = asyncWrapper(async (req, res) => {
   const { username, email, password } = req.body;
   const user = await userService.createUser({ username, email, password });
-  const userToSend = userService.sanitizeUser(user);
-
-  res.status(201).json({ success: true, userToSend });
+  
+  res.status(201).json({ success: true, user: userService.sanitizeUser(user) });
 });
 
 export const logout = asyncWrapper(async (req, res) => {
@@ -46,7 +45,6 @@ export const getUserDetails = asyncWrapper(async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  // Send the user details without the password
   res.status(200).json({ user: userService.sanitizeUser(user) });
 });
 
@@ -54,5 +52,3 @@ export const getAllUsers = asyncWrapper(async (req, res) => {
   const users = await userService.getAllUsers();
   res.status(200).json({ users });
 });
-
-
