@@ -1,37 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import userservice from "../api/services/UserService.js"
 import { useForm } from "react-hook-form";
-import { createUser } from "../api/services/userService";
 import { useNavigate } from "react-router-dom";
+import { getErrorMessage, errorContext } from "../errors/errorHandler.js";
 import Spinner from "../components/spinner";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login,isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+    document.title = "Register";
+  }, []);
+
   const {
     register,
     setError,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
-
-
   const onSubmit = async (userData) => {
     try {
       setIsLoading(true);
-      const data = await createUser(userData);
+      const data = await userservice.createUser(userData);
       if (data) {
         login(data);
-        navigate("/login");
+        navigate("/");
       }
       console.log(userData);
     } catch (error) {
       console.error(error);
       setError("server", {
         type: "manual",
-        message: error.message,
+        message: getErrorMessage(error.response, errorContext.register),
       });
     } finally {
       setIsLoading(false);
@@ -49,12 +57,13 @@ const RegisterPage = () => {
             </label>
             <input
               type="text"
-              placeholder="Name"
+              placeholder="Username"
               {...register("username", { required: "Username is required" })}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-green-600"
+              onChange={() => clearErrors("server")}
             />
-            {errors.name && (
-              <p className="text-red-600">{errors.name.message}</p>
+            {errors.username && (
+              <p className="text-red-600">{errors.username.message}</p>
             )}
           </div>
 
@@ -72,6 +81,7 @@ const RegisterPage = () => {
                   message: "Entered value does not match email format",
                 },
               })}
+              onChange={() => clearErrors("server")}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-green-600"
             />
             {errors.email && (
@@ -93,6 +103,7 @@ const RegisterPage = () => {
                   message: "Password must have at least 6 characters",
                 },
               })}
+              onChange={() => clearErrors("server")}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-green-600"
             />
             {errors.password && (
