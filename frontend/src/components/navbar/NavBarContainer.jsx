@@ -1,35 +1,46 @@
-import React from "react";
-import Tab from "./NavbarTab";
-import SearchBar from "./SearchBar.jsx";
-import { Link } from "react-router-dom";
+import React from 'react';
+import NavBarTab from './NavBarTab';
+import SearchBar from './SearchBar';
+import { useAuth } from '../../context/AuthContext';
 
 const NavBarContainer = () => {
+  const { isAuthenticated } = useAuth();
+
+  const primaryNavItems = [
+    { label: 'Home', to: '/' },
+    { label: 'Shop', to: '/shop' },
+    { label: 'About Us', to: '/about-us' }
+  ];
+
+  const authNavItems = isAuthenticated ? [
+    { label: 'Watchlist', to: '/watchlist' },
+    { label: 'Profile', to: '/profile' },
+    { label: 'Logout', to: '/logout' } 
+  ] : [
+    { label: 'Login', to: '/login' },
+    { label: 'Register', to: '/register' }
+  ];
+
   return (
     <nav className="bg-white shadow-lg py-2">
-      <div className="max-w-12xl mx-auto px-4">
-        <div className="flex justify-between">
-          <div className="flex space-x-7">
-            {/* Primary Nav Items */}
-            <div className="hidden md:flex items-center space-x-1">
-              <Link to="/">
-                <Tab type="Tab" lable="Home" isCurrent={true} />
-              </Link>
-              <Link to="/shop">
-                <Tab type="Tab" lable="Shop" />
-              </Link>
-              <Link to="/about-us">
-                <Tab type="Tab" lable="About Us" />
-              </Link>
-            </div>
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center">
+          {/* Primary Nav Items */}
+          <div className="flex space-x-4">
+            {primaryNavItems.map(item => (
+              <NavBarTab key={item.label} to={item.to} type="primary">
+                {item.label}
+              </NavBarTab>
+            ))}
           </div>
-          <div className="hidden md:flex items-center space-x-3 ">
+          {/* SearchBar and Auth Nav Items */}
+          <div className="flex items-center space-x-4">
             <SearchBar />
-            <Link to="/login">
-              <Tab type="Login" />
-            </Link>
-            <Link to="/register">
-              <Tab type="Register" />
-            </Link>
+            {authNavItems.map(item => (
+              <NavBarTab key={item.label} to={item.to} type="secondary">
+                {item.label}
+              </NavBarTab>
+            ))}
           </div>
         </div>
       </div>
