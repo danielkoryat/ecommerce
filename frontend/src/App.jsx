@@ -6,6 +6,8 @@ import Shop from "./pages/ProductsPage.jsx";
 import AboutUs from "./pages/AboutUsPage.jsx";
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
+import CreateProductPage from "./pages/CreateProductPage.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/sell" element={<CreateProductPage />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
