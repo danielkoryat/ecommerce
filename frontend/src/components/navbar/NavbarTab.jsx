@@ -9,7 +9,6 @@ const NavBarTab = ({ to, children }) => {
     active: "text-green-500 border-b-4 border-green-500",
     login: `${baseButtonStyle} text-gray-500 hover:bg-green-500 hover:text-white`,
     register: `${baseButtonStyle} text-white bg-green-500 hover:bg-green-400`,
-    logout: `${baseButtonStyle} text-white bg-red-500 hover:bg-red-400`,
   };
 
   const getNavLinkClass = ({ isActive }) => {
@@ -24,6 +23,7 @@ const NavBarTab = ({ to, children }) => {
         return isActive ? `${tabStyles.base} ${tabStyles.active}` : `${tabStyles.base} ${tabStyles.inactive}`;
     }
   };
+
 
   return (
     <NavLink to={to} className={getNavLinkClass}>

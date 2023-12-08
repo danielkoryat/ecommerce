@@ -18,6 +18,11 @@ class UserService {
     });
     return response.data;
   }
+
+  async logUserOut() {
+    const response = await apiClient.post("/user/logout");
+    return response.data;
+  }
 }
 
 export default new UserService();

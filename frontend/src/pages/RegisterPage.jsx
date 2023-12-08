@@ -4,12 +4,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage, errorContext } from "../errors/errorHandler.js";
 import Spinner from "../components/spinner";
-import { useAuth } from "../context/AuthContext.jsx";
+import { loginUser } from "../app/userSlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login,isAuthenticated } = useAuth();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -31,7 +33,7 @@ const RegisterPage = () => {
       setIsLoading(true);
       const data = await userservice.createUser(userData);
       if (data) {
-        login(data);
+        dispatch(loginUser(data));
         navigate("/");
       }
       console.log(userData);
