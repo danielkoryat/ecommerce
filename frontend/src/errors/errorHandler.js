@@ -2,6 +2,8 @@
 export const errorContext = {
   login: "login",
   register: "register",
+  logout: "logout",
+  product: "product",
 };
 
 

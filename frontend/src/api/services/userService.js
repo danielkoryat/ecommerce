@@ -2,12 +2,21 @@
 import apiClient from "../axios.js";
 
 class UserService {
-  async validateUser({username, password}) {
+  async loginUser({ username, password }) {
     const response = await apiClient.post("/user/login", {
       username,
       password,
     });
     return response.data;
+  }
+
+  async isAuthenticated() {
+    try {
+      await apiClient.get("/user/checkUserAuth");
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async createUser({ username, email, password }) {

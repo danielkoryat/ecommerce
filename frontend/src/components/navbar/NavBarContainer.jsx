@@ -39,7 +39,7 @@ const NavBarContainer = () => {
   const authNavItems = isAuthenticated
     ? [
         { label: "Watchlist", to: "/watchlist" },
-        {label: "Sell", to: "/sell"},
+        { label: "Sell", to: "/sell" },
         { label: "Profile", to: "/profile" },
         { label: "Logout", to: "/logout" },
       ]
@@ -50,8 +50,8 @@ const NavBarContainer = () => {
 
   const handleLogout = async () => {
     try {
-      await UserService.logUserOut();
       dispatch(logoutUser());
+      await UserService.logUserOut();
       navigate("/login");
     } catch (error) {
       console.error(error);

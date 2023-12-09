@@ -3,24 +3,19 @@ import { useForm } from "react-hook-form";
 import UserService from "../api/services/UserService.js";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/spinner";
-import { getErrorMessage, errorContext } from "../errors/errorHandler.js";
-import {loginUser} from "../app/userSlice.js";
-import {useSelector, useDispatch} from "react-redux";
+import {  errorContext } from "../errors/errorHandler.js";
+import { loginUser } from "../app/userSlice.js";
+import { useSelector, useDispatch } from "react-redux";
+import useFetch from "../hooks/useFetch.js";
 
 const LoginPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
- 
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
-    }
-    document.title = "Login";
-  }, []);
+  const { loading, serverError, fetchData } = useFetch(
+    UserService.loginUser,
+    errorContext.login
+  );
 
   const {
     register,
@@ -31,22 +26,11 @@ const LoginPage = () => {
   } = useForm();
 
   const onSubmit = async (userData) => {
-    try {
-      setIsLoading(true);
-      const data = await UserService.validateUser(userData);
-      if (data) {
-        dispatch(loginUser(data));
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-      setError("server", {
-        type: "manual",
-        message: getErrorMessage(error.response, errorContext.login),
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const data = await fetchData(userData);
+    if (data) {
+      dispatch(loginUser(data));
+      navigate("/");
+    } 
   };
 
   return (
@@ -100,11 +84,9 @@ const LoginPage = () => {
               Login
             </button>
           </div>
-          {errors.server && (
-            <p className="text-red-600">{errors.server.message}</p>
-          )}
+          {serverError && <p className="text-red-600">{serverError}</p>}
         </form>
-        {isLoading && <Spinner />}
+        {loading && <Spinner />}
       </div>
     </div>
   );

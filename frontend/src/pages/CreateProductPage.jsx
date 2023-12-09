@@ -1,19 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Select from 'react-select';
-
+import Select from "react-select";
+import productService from "../api/services/ProductService";
+import { getErrorMessage, errorContext } from "../errors/errorHandler";
+import Spinner from "../components/spinner";
 
 export default function CreateProductPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    document.title = "Create Product";
+  }, []);
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Here you would typically handle the form submission,
-    // like sending the data to your backend server.
+  const onSubmit = async (formData) => {
+    try {
+      const productData = new FormData();
+      for (const [key, value] of Object.entries(formData)) {
+        if (key === "images") {
+          // Assuming 'image' is the name of your file input field
+          productData.append(key, value[0]); // Append the file to FormData
+        } else {
+          productData.append(key, value); // Append other form fields to FormData
+        }
+      }
+
+      const product = await productService.createProduct(productData);
+      console.log(product);
+      alert("Product created successfully");
+    } catch (error) {
+      console.log(error);
+      setError("server", {
+        type: "manual",
+        message: getErrorMessage(error.response, errorContext.product),
+      });
+    }
   };
 
   const categoriesOptions = [
@@ -30,75 +57,73 @@ export default function CreateProductPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto">
         <div className="mb-4">
           <label
-            htmlFor="productName"
+            htmlFor="name"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Product Name
           </label>
           <input
-            id="productName"
-            name="productName"
+            id="name"
+            name="name"
             type="text"
-            {...register("productName", { required: true })}
+            {...register("name", { required: true })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter product name"
           />
-          {errors.productName && (
+          {errors.name && (
             <p className="text-red-500">Product name is required.</p>
           )}
         </div>
 
         <div className="mb-4">
           <label
-            htmlFor="productDescription"
+            htmlFor="description"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Description
           </label>
           <textarea
-            id="productDescription"
-            {...register("productDescription", { required: true })}
+            id="description"
+            {...register("description", { required: true })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter product description"
           ></textarea>
-          {errors.productDescription && (
+          {errors.description && (
             <p className="text-red-500">Product description is required.</p>
           )}
         </div>
 
         <div className="mb-4">
           <label
-            htmlFor="productPrice"
+            htmlFor="price"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Price
           </label>
           <input
-            id="productPrice"
-            name="productPrice"
+            id="price"
+            name="price"
             type="number"
             step="0.01"
-            {...register("productPrice", { required: true })}
+            {...register("price", { required: true })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="0.00"
           />
-          {errors.productPrice && (
-            <p className="text-red-500">Price is required.</p>
-          )}
+          {errors.price && <p className="text-red-500">Price is required.</p>}
         </div>
 
         <div className="mb-4">
           <label
-            htmlFor="productAmount"
+            htmlFor="amount"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Amount
           </label>
           <input
-            id="productAmount"
-            name="productAmount"
+            id="amount"
+            name="amount"
             type="number"
-            {...register("productAmount", { required: true })}
+            {...register("amount", { required: true })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter amount"
           />
@@ -108,47 +133,46 @@ export default function CreateProductPage() {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="productCategory"
+            htmlFor="categories"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Category
           </label>
           <Select
-            id="productCategory"
+            id="categories"
             options={categoriesOptions}
             isMulti
             className="text-gray-700 leading-tight"
             classNamePrefix="select"
           />
-          {errors.productCategory && (
-            <p className="text-red-500 text-xs italic">
-              Please select at least one category.
-            </p>
+          {errors.categories && (
+            <p className="text-red-500">Please select at least one category.</p>
           )}
         </div>
 
         {/* Image Upload */}
         <div className="mb-6">
           <label
-            htmlFor="productImages"
+            htmlFor="images"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
             Product Images
           </label>
           <input
             type="file"
-            id="productImages"
-            name="productImages"
+            id="images"
+            name="images"
             multiple
-            {...register}
+            {...register("images")}
             className="w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-full file:border-0
-              file:text-sm file:font-semibold
-              file:bg-violet-50 file:text-violet-700
-              hover:file:bg-violet-100
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-violet-50 file:text-violet-700
+            hover:file:bg-violet-100
             "
-          />
+            accept="image/*"
+            />
         </div>
 
         {/* Submit Button */}
@@ -160,6 +184,11 @@ export default function CreateProductPage() {
             Create Product
           </button>
         </div>
+        {isLoading && <Spinner />}
+        {/* Error Message */}
+        {errors.server && (
+          <p className="text-red-500">{errors.server.message}</p>
+        )}
       </form>
     </div>
   );

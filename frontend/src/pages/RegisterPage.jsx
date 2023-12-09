@@ -13,12 +13,6 @@ const RegisterPage = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
-    }
-    document.title = "Register";
-  }, []);
 
   const {
     register,
