@@ -1,36 +1,39 @@
 import userService from "../services/UserService.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
+import { setTokenCookie } from "../utils/authUtils.js";
 import jwt from "jsonwebtoken";
-import customeError from "../errors/customeError.js";
 
 export const login = asyncWrapper(async (req, res) => {
-  const { username, password } = req.body;
-  const user = await userService.validateUser(username, password);
+  const user = await userService.validateUser(req.body);
+  if (!user) {
+    return res.status(401).json({ success: false, message: "Invalid credentials" });
+  }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "30s",
-  });
+  setTokenCookie(res,req, user);
+  return res.status(200).json({ success: true});
+});
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
-  req.user = user;
-
-  return res.status(200).json({ success: true, token });
+export const checkUserAuth = asyncWrapper(async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  return res.status(200).json({ success: true, user });
 });
 
 export const signup = asyncWrapper(async (req, res) => {
-  const { username, email, password } = req.body;
-  const user = await userService.createUser({ username, email, password });
-  
+  const user = await userService.createUser( req.body);
+
+  setTokenCookie(res,req, user);
   res.status(201).json({ success: true, user: userService.sanitizeUser(user) });
 });
 
 export const logout = asyncWrapper(async (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
+    expires: new Date(0), 
+    maxAge: 0,
     sameSite: "none",
     secure: true,
   });
@@ -39,13 +42,9 @@ export const logout = asyncWrapper(async (req, res) => {
 
 export const getUserDetails = asyncWrapper(async (req, res) => {
   const { id: receivedId } = req.params;
-
   const user = await userService.getUserById(receivedId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
 
-  res.status(200).json({ user: userService.sanitizeUser(user) });
+  res.status(200).json({ user });
 });
 
 export const getAllUsers = asyncWrapper(async (req, res) => {

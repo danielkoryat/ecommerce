@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import CustomeError from "../errors/customeError.js";
 
 const cookieJwtAuth = (req, res, next) => {
     const token = req.cookies.token;
@@ -8,7 +9,7 @@ const cookieJwtAuth = (req, res, next) => {
         next();
     } catch (error) {
         res.clearCookie("token");
-        return res.status(401).json({ error: "Invalid credentials" });
+        throw new CustomeError(error.message, 401);
     }
 }
 

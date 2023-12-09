@@ -1,50 +1,52 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import customeError from "../errors/customeError.js"
-
+import CustomError from "../errors/customeError.js";
 
 class UserService {
-  async createUser(userData) {
-    const { username, email, password } = userData;
+  async createUser({ username, email, password }) {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      throw new CustomError("User already exists", 409);
+    }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      throw new CustomError("Email already exists", 409);
+    }
     const user = await User.create({ username, email, password });
-    return user;
+    return this.sanitizeUser(user);
   }
 
-  async validateUser(username, password) {
+  async validateUser({ username, password }) {
     const user = await User.findOne({ username });
 
-    if (!user) {
-      throw new customeError("Invalid username", 404);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      // Use generic error message for security
+      throw new CustomError("Invalid username or password", 401);
     }
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const userToSend = user.toObject();
-      delete userToSend.password; // Remove sensitive data
-      return userToSend;
-    } else {
-      throw new customeError("Invalid password", 401);
-    }
+    return this.sanitizeUser(user);
   }
 
-   sanitizeUser = (user) => {
-      const userToSend = user.toObject();
-      delete userToSend.password; // Remove the password before sending it to the client
-      return userToSend;
-    };
-
-    async getUserById(id) {
-      const user = await User.findById(id);
-      if (!user) {
-        throw new customeError("User not found", 404);
-      }
-      return user;
+  sanitizeUser = (user) => {
+    let userToSend;
+    if (user.toObject) {
+      userToSend = user.toObject();
+    } else {
+      userToSend = { ...user };
     }
 
-    async getAllUsers() {
-      const users = await User.find();
-      return users;
+    delete userToSend.password; // Remove the password before sending it to the client
+    return userToSend;
+  };
+
+  async getUserById(id) {
+    const user = await User.findById(id);
+    if (!user) {
+      throw new CustomError("User not found", 404);
     }
+    return user;
+  }
 }
-
 
 export default new UserService();
