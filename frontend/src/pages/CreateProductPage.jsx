@@ -4,42 +4,47 @@ import Select from "react-select";
 import productService from "../api/services/ProductService";
 import { getErrorMessage, errorContext } from "../errors/errorHandler";
 import Spinner from "../components/spinner";
+import usefetch from "../hooks/useFetch";
 
 export default function CreateProductPage() {
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [secsessMessage, setSuccessMessage] = useState(null);
+  const { loading, serverError, fetchData, clearServerError } = usefetch(
+    productService.createProduct,
+    errorContext.product
+  );
   useEffect(() => {
     document.title = "Create Product";
   }, []);
+
   const {
     register,
     handleSubmit,
     setError,
-    clearErrors,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (formData) => {
-    try {
-      const productData = new FormData();
-      for (const [key, value] of Object.entries(formData)) {
-        if (key === "images") {
-          // Assuming 'image' is the name of your file input field
-          productData.append(key, value[0]); // Append the file to FormData
-        } else {
-          productData.append(key, value); // Append other form fields to FormData
-        }
+    const productData = new FormData();
+    for (const [key, value] of Object.entries(formData)) {
+      if (key === "images") {
+        Array.from(value).forEach((file) => {
+          productData.append(key, file);
+        });
+      } else {
+        productData.append(key, value);
       }
+    }
 
-      const product = await productService.createProduct(productData);
-      console.log(product);
-      alert("Product created successfully");
-    } catch (error) {
-      console.log(error);
-      setError("server", {
-        type: "manual",
-        message: getErrorMessage(error.response, errorContext.product),
-      });
+    if ([...productData.entries()].length === 0) {
+      console.log("No data to submit");
+      return;
+    }
+    console.log([...productData.entries()]);
+
+    const data = await fetchData(productService.createProduct(productData));
+    if (data) {
+      console.log(data);
+      setSuccessMessage("Product created successfully");
     }
   };
 
@@ -66,7 +71,10 @@ export default function CreateProductPage() {
             id="name"
             name="name"
             type="text"
-            {...register("name", { required: true })}
+            {...register("name", {
+              required: true,
+              onChange: () => clearServerError(),
+            })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter product name"
           />
@@ -84,7 +92,10 @@ export default function CreateProductPage() {
           </label>
           <textarea
             id="description"
-            {...register("description", { required: true })}
+            {...register("description", {
+              required: true,
+              onChange: () => clearServerError(),
+            })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter product description"
           ></textarea>
@@ -105,7 +116,10 @@ export default function CreateProductPage() {
             name="price"
             type="number"
             step="0.01"
-            {...register("price", { required: true })}
+            {...register("price", {
+              required: true,
+              onChange: () => clearServerError(),
+            })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="0.00"
           />
@@ -123,7 +137,10 @@ export default function CreateProductPage() {
             id="amount"
             name="amount"
             type="number"
-            {...register("amount", { required: true })}
+            {...register("amount", {
+              required: true,
+              onChange: () => clearServerError(),
+            })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter amount"
           />
@@ -172,7 +189,7 @@ export default function CreateProductPage() {
             hover:file:bg-violet-100
             "
             accept="image/*"
-            />
+          />
         </div>
 
         {/* Submit Button */}
@@ -184,11 +201,10 @@ export default function CreateProductPage() {
             Create Product
           </button>
         </div>
-        {isLoading && <Spinner />}
+        {loading && <Spinner />}
         {/* Error Message */}
-        {errors.server && (
-          <p className="text-red-500">{errors.server.message}</p>
-        )}
+        {serverError && <p className="text-red-500">{serverError}</p>}
+        {secsessMessage && <p className="text-green-500">{secsessMessage}</p>}
       </form>
     </div>
   );

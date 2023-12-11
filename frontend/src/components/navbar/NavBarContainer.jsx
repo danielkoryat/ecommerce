@@ -40,7 +40,7 @@ const NavBarContainer = () => {
     ? [
         { label: "Watchlist", to: "/watchlist" },
         { label: "Sell", to: "/sell" },
-        { label: "Profile", to: "/profile" },
+        { label: "Dashboard", to: "/dashboard" },
         { label: "Logout", to: "/logout" },
       ]
     : [

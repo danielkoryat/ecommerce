@@ -11,7 +11,6 @@ import useFetch from "../hooks/useFetch.js";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const { loading, serverError, fetchData } = useFetch(
     UserService.loginUser,
     errorContext.login
