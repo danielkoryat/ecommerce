@@ -11,5 +11,4 @@ export const setTokenCookie = (res,req ,user) => {
     secure: true,
   });
 
-  req.user = user;
 };

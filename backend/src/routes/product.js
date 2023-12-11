@@ -1,19 +1,21 @@
 import express from "express";
 import {
   createProduct,
-  getAllProducts,
   getProductById,
+  getProducts
 } from "../controllers/productController.js";
 import cookieJwtAuth from "../middlewares/cookieJwtAuth.js";
 const router = express.Router();
+import multer from "multer";
 
-// Public route
-router.route("/").get(getAllProducts);
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// Protected route: Only authenticated users can create a product
-router.route("/").post(cookieJwtAuth, createProduct);
-
-// Public route
 router.route("/:id").get(getProductById);
+
+router.route("/")
+  .post(cookieJwtAuth, upload.array('images', 3), createProduct)
+  .get(getProducts);
+// Public route
 
 export default router;

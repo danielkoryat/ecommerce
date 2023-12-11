@@ -1,52 +1,50 @@
 import Joi from "joi";
-import JoiObjectId from "joi-objectid";
 import Product from "../models/product.js";
-import CustomError from "../errors/customeError.js";
+import CustomError from "../errors/customError.js";
+import { getProductSchema } from "../utils/validateHelpers.js"; // Correct function name if misspelled
 
 class ProductService {
-  // Define the product validation schema using Joi
-  productSchema = Joi.object({
-    name: Joi.string().required().trim(),
-    description: Joi.string().required().trim(),
-    price: Joi.number().min(0).required(),
-    amount: Joi.number().min(0).required(),
-    categories: Joi.array().items(JoiObjectId(Joi)).optional(), // Assuming you have a Joi.objectId() extension
-    images: Joi.array()
-      .items(
-        Joi.object({
-          url: Joi.string().required().trim(),
-          alt: Joi.string().required().trim(),
-        })
-      )
-      .optional(),
-  });
-
-  async createProduct(productData, userId) {
-    // Validate the productData against the schema
-    const { error } = this.productSchema.validate(productData);
-
-    // If validation fails, throw a custom error
-    if (error) {
-      throw new CustomError(400, error.details[0].message);
+  async createProduct(productData) {
+    try {
+      const product = await Product.create(productData);
+      return product.toJSON(); // Return the created product
+    } catch (error) {
+      console.log(error);
     }
-
-    // If validation is successful, proceed with product creation
-    const { name, description, price, amount, categories, images } =
-      productData;
-    const product = await Product.create({
-      name,
-      description,
-      price,
-      amount,
-      categories,
-      images,
-    });
-    return product;
   }
 
-  async getAllProducts() {
-    const products = await Product.find();
-    return products;
+  validateProductData(productData) {
+    const productSchema = getProductSchema();
+    const { error } = productSchema.validate(productData);
+
+    if (error) {
+      console.log(error);
+      throw new CustomError(
+        400,
+        error.details.map((detail) => detail.message).join(", ")
+      );
+    }
+  }
+
+  async getProducts(page) {
+    const limit = 10;
+
+    try {
+      const products = await Product.find()
+      .sort({ createdAt: -1 })
+      .skip(page * limit)
+      .limit(limit);
+
+      if (!products) {
+        console.log("No products found");
+      } else {
+        console.log(products);
+      }
+      return products;
+    } catch (error) {
+      console.log(error);
+    }
+    
   }
 
   async getProductById(id) {
@@ -54,7 +52,7 @@ class ProductService {
     if (!product) {
       throw new CustomError(404, "Product not found");
     }
-    
+
     return product;
   }
 }

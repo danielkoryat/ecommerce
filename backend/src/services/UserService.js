@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import CustomError from "../errors/customeError.js";
+import CustomError from "../errors/customError.js";
 
 class UserService {
   async createUser({ username, email, password }) {

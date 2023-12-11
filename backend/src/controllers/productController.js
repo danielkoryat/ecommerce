@@ -1,19 +1,35 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
-import productService from "../services/ProductService.js";
+import ProductService from "../services/ProductService.js";
+import { getIdFromToken } from "../utils/tokenDecoder.js";
+import { prepareImagesForProduct } from "../utils/helpers.js";
 
 export const createProduct = asyncWrapper(async (req, res) => {
-    const product = await productService.createProduct(req.body);
-    res.status(201).json({ success: true, product });
-});
+  const userId = getIdFromToken(req, res);
+  const filesData = prepareImagesForProduct(req.files);
 
-export const getAllProducts = asyncWrapper(async (req, res) => {
-    const products = await productService.getAllProducts();
-    res.status(200).json({ success: true, products });
+  let productData = { ...req.body, seller: userId, images: filesData };
+
+  ProductService.validateProductData(productData);
+
+  const createdProduct = await ProductService.createProduct(productData);
+  return res.status(201).json({ success: true, product: createdProduct });
 });
 
 export const getProductById = asyncWrapper(async (req, res) => {
-    const { id: receivedId } = req.params;
-    const product = await productService.getProductById(receivedId);
-    
-    res.status(200).json({ success: true, product });
+  const { id: receivedId } = req.params;
+  const product = await ProductService.getProductById(receivedId);
+
+  res.status(200).json({ success: true, product });
+});
+
+export const getProducts = asyncWrapper(async (req, res) => {
+  const page = req.query.page;
+
+  if (!page) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Page number is required" });
+  }
+  const products = await ProductService.getProducts(page);
+  res.status(200).json(products);
 });

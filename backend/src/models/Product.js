@@ -6,7 +6,11 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
- 
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  }, 
   description: {
     type: String,
     required: true,
@@ -30,10 +34,14 @@ const productSchema = new mongoose.Schema({
   ],
   images: [
     {
-      url: String,
-      alt: String,
+      data: Buffer,
+      contentType: String, 
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

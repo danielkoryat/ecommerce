@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import CustomeError from "../errors/customeError.js";
+import CustomError from "../errors/customError.js";
 
 const cookieJwtAuth = (req, res, next) => {
     const token = req.cookies.token;
@@ -9,7 +9,7 @@ const cookieJwtAuth = (req, res, next) => {
         next();
     } catch (error) {
         res.clearCookie("token");
-        throw new CustomeError(error.message, 401);
+        throw new CustomError(error.message, 401);
     }
 }
 

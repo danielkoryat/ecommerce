@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import CustomeError from "../errors/customeError.js";
+import CustomError from "../errors/customError.js";
 import jwt from "jsonwebtoken";
 
 const errorHandler = (err, req, res, next) => {
@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Custom error handling
-  if (err instanceof CustomeError) {
+  if (err instanceof CustomError) {
     // Assuming CustomeError class has a `statusCode` property you can use
     return res.status(err.statusCode).json({ message: err.message });
   }
