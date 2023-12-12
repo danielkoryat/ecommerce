@@ -3,23 +3,26 @@ import JoiObjectId from "joi-objectid";
 
 export const getProductSchema = () => {
   Joi.objectId = JoiObjectId(Joi);
+
+  const imageSchema = Joi.object({
+    fieldname: Joi.string().required(),
+    originalname: Joi.string().required(),
+    encoding: Joi.string().required(),
+    mimetype: Joi.string()
+      .valid("image/jpeg", "image/png", "image/gif", "image/bmp")
+      .required(),
+    buffer: Joi.binary().required(),
+    size: Joi.number().integer().min(1).required(), 
+  });
+
   const productSchema = Joi.object({
     name: Joi.string().required().trim(),
-    seller: Joi.objectId().required(), // Use Joi.objectId() directly after extending Joi
+    seller: Joi.objectId().required(),
     description: Joi.string().required().trim(),
     price: Joi.number().min(0).required(),
     amount: Joi.number().min(0).required(),
-    categories: Joi.array().items(Joi.objectId()).optional(), // Same here, use Joi.objectId()
-    images: Joi.array()
-      .items(
-        Joi.object({
-          buffer: Joi.binary().required(), // Assuming you want to store the image data
-          mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/gif", "image/bmp")
-            .required(),
-        })
-      )
-      .optional(),
+    categories: Joi.array().items(Joi.objectId()).optional(),
+    images: Joi.array().items(imageSchema).optional(),
   });
 
   return productSchema;

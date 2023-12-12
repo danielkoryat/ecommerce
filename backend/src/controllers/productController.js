@@ -1,13 +1,12 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import ProductService from "../services/ProductService.js";
 import { getIdFromToken } from "../utils/tokenDecoder.js";
-import { prepareImagesForProduct } from "../utils/helpers.js";
 
 export const createProduct = asyncWrapper(async (req, res) => {
+  
   const userId = getIdFromToken(req, res);
-  const filesData = prepareImagesForProduct(req.files);
 
-  let productData = { ...req.body, seller: userId, images: filesData };
+  let productData = { ...req.body, seller: userId, images: req.files };
 
   ProductService.validateProductData(productData);
 
@@ -19,7 +18,7 @@ export const getProductById = asyncWrapper(async (req, res) => {
   const { id: receivedId } = req.params;
   const product = await ProductService.getProductById(receivedId);
 
-  res.status(200).json({ success: true, product });
+  res.status(200).json(product);
 });
 
 export const getProducts = asyncWrapper(async (req, res) => {

@@ -1,16 +1,23 @@
 import Joi from "joi";
 import Product from "../models/product.js";
 import CustomError from "../errors/customError.js";
-import { getProductSchema } from "../utils/validateHelpers.js"; // Correct function name if misspelled
+import { getProductSchema } from "../utils/validateHelpers.js"; 
+import {uploadImagesToAzure} from './AzureStorageService.js'
 
 class ProductService {
   async createProduct(productData) {
-    try {
-      const product = await Product.create(productData);
-      return product.toJSON(); 
-    } catch (error) {
-      console.log(error);
+    const images = productData.images || [];
+    delete productData.images;
+
+    let uploadedImages = [];
+    if (images.length > 0) {
+      uploadedImages = await uploadImagesToAzure(images);
     }
+
+    productData.imageUrls = uploadedImages;
+
+    const product = await Product.create(productData);
+    return product.toJSON();
   }
 
   validateProductData(productData) {
@@ -29,22 +36,12 @@ class ProductService {
   async getProducts(page) {
     const limit = 10;
 
-    try {
-      const products = await Product.find()
+    const products = await Product.find()
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
 
-      if (!products) {
-        console.log("No products found");
-      } else {
-        console.log(products);
-      }
-      return products;
-    } catch (error) {
-      console.log(error);
-    }
-    
+    return products;
   }
 
   async getProductById(id) {

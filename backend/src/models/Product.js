@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-  }, 
+  },
   description: {
     type: String,
     required: true,
@@ -32,12 +32,7 @@ const productSchema = new mongoose.Schema({
       ref: "Category",
     },
   ],
-  images: [
-    {
-      data: Buffer,
-      contentType: String, 
-    },
-  ],
+  imageUrls: [String],
   createdAt: {
     type: Date,
     default: Date.now,

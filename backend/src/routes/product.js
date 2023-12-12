@@ -5,8 +5,9 @@ import {
   getProducts
 } from "../controllers/productController.js";
 import cookieJwtAuth from "../middlewares/cookieJwtAuth.js";
-const router = express.Router();
 import multer from "multer";
+
+const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -14,7 +15,7 @@ const upload = multer({ storage: storage });
 router.route("/:id").get(getProductById);
 
 router.route("/")
-  .post(cookieJwtAuth, upload.array('images', 3), createProduct)
+  .post(cookieJwtAuth, upload.array('images', 8), createProduct)
   .get(getProducts);
 // Public route
 
