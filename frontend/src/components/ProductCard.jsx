@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { proccessImagentoUrl } from "../utils/helpers";
 
 const ProductCard = ({ product }) => {
-  const { _id, images, name, price } = product;
+  const { _id, imageUrls, name, price } = product;
   const navigate = useNavigate();
-  const pathToDefoultImage = "../../public/images/default-product-image.png";
+  const pathToDefoultImage = "../images/default-product-image.png";
 
   const handleClick = () => {
     navigate(`/products/${_id}`);
@@ -18,9 +17,7 @@ const ProductCard = ({ product }) => {
     >
       <img
         className="w-full"
-        src={
-          product.images ? proccessImagentoUrl(images[0]) : pathToDefoultImage
-        }
+        src={imageUrls[0] ? imageUrls[0] : pathToDefoultImage}
         alt={name}
       />
 

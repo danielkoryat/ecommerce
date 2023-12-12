@@ -26,22 +26,24 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/products/:productId" element={<ProductPage />} />
-        <Route element={<PrivateRoute />}>
-          {privateRoutes.map((route, index) => (
-            <Route key={index} path={route.path} element={route.element} />
-          ))}
-        </Route>
-        <Route element={<PublicOnlyRoute />}>
-          {publicRoutes.map((route, index) => (
-            <Route key={index} path={route.path} element={route.element} />
-          ))}
-        </Route>
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/products/:productId" element={<ProductPage />} />
+          <Route element={<PrivateRoute />}>
+            {privateRoutes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
+            ))}
+          </Route>
+          <Route element={<PublicOnlyRoute />}>
+            {publicRoutes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
+            ))}
+          </Route>
+        </Routes>
+      </main>
       <Footer />
     </Router>
   );

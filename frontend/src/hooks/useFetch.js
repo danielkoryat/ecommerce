@@ -23,6 +23,7 @@ function useFetch(apiCallFunction, customErrorContext) {
         navigate("/login");
       }
       const errorMessage = getErrorMessage(err.response, customErrorContext);
+      console.log(err);
       setServerError(errorMessage);
     } finally {
       setLoading(false);

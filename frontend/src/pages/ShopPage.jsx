@@ -23,7 +23,7 @@ const ShopPage = () => {
 
   if (serverError) return <div className="text-red-900">{serverError}</div>;
   if (loading) return <Spinner />;
-  if (products.length === 0) return <NoProductsNotification />;
+  if (products.length === 0) return <NoProductsNotification context="shop" />;
 
   return (
     <>
