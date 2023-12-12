@@ -7,7 +7,7 @@ class ProductService {
   async createProduct(productData) {
     try {
       const product = await Product.create(productData);
-      return product.toJSON(); // Return the created product
+      return product.toJSON(); 
     } catch (error) {
       console.log(error);
     }
