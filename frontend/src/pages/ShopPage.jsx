@@ -5,6 +5,8 @@ import ProductService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
 import NoProductsNotification from "../components/NoProductNotification";
 import Spinner from "../components/spinner";
+
+//TODO implement categories filter
 const ShopPage = () => {
   const [page, setPage] = useState(0);
   const [products, setProducts] = useState([]);

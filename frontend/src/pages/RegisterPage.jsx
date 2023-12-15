@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import userservice from "../api/services/UserService.js"
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { getErrorMessage, errorContext } from "../errors/errorHandler.js";
 import Spinner from "../components/spinner";
-import { loginUser } from "../app/userSlice.js";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createUserAsync } from "../app/thunks/userThunks.js";
+import { resetServerError } from "../app/userSlice.js";
+
 
 const RegisterPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const loading = useSelector((state) => state.user.loading);
+  const serverError = useSelector((state) => state.user.serverError);
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  useEffect(() => {
+    dispatch(resetServerError());
+  }, [dispatch]);
 
 
   const {
@@ -23,23 +25,7 @@ const RegisterPage = () => {
   } = useForm();
 
   const onSubmit = async (userData) => {
-    try {
-      setIsLoading(true);
-      const data = await userservice.createUser(userData);
-      if (data) {
-        dispatch(loginUser(data));
-        navigate("/");
-      }
-      console.log(userData);
-    } catch (error) {
-      console.error(error);
-      setError("server", {
-        type: "manual",
-        message: getErrorMessage(error.response, errorContext.register),
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    dispatch(createUserAsync(userData));
   };
 
   return (
@@ -115,11 +101,11 @@ const RegisterPage = () => {
               Register
             </button>
           </div>
-          {errors.server && (
-            <p className="text-red-600">{errors.server.message}</p>
+          {serverError && (
+            <p className="text-red-600">{serverError}</p>
           )}
         </form>
-        {isLoading && <Spinner />}
+        {loading && <Spinner />}
       </div>
     </div>
   );

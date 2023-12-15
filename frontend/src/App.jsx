@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "./app/categorySlice";
 import Navbar from "./components/navbar/NavBarContainer.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/HomePage.jsx";
@@ -10,9 +13,17 @@ import CreateProductPage from "./pages/CreateProductPage.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
-import ProductPage from "./pages/ProductPage.jsx";
+import ProductPage from "./pages/ProductPage/PageContainer.jsx";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
+  const categories = useSelector((state) => state.category.categories);
+
   const publicRoutes = [
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },

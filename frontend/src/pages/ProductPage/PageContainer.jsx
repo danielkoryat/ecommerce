@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import ProductService from "../api/services/ProductService";
-import { errorContext } from "../errors/errorHandler";
-import Spinner from "../components/spinner";
-import NoProductsNotification from "../components/NoProductNotification";
-import CommentsSection from "../components/CommentsSection"; // Assuming you have a CommentsSection component
+import useFetch from "../../hooks/useFetch";
+import ProductService from "../../api/services/ProductService";
+import { errorContext } from "../../errors/errorHandler";
+import Spinner from "../../components/spinner";
+import NoProductsNotification from "../../components/NoProductNotification";
+import CommentsSection from "./CommentsSection";
+import EditProductComponent from "./EditProduct";
+import Alert from "../../components/Alert";
 
 const ProductPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { loading, serverError, fetchData } = useFetch(
     ProductService.getProductById,
     errorContext.product
   );
-  const isSeller = true; 
+
+  const [alertMessage, setAlertMessage] = useState(null);
+  const isSeller = true;
   //TODO find a global way to acsess this
   const pathToDefoultImage = "../images/default-product-image.png";
 
@@ -30,10 +35,7 @@ const ProductPage = () => {
 
   const handleDelete = async () => {
     //TODO Implement delete functionality
-  };
-
-  const handleEdit = () => {
-    navigate(`/edit-product/${productId}`);
+    setAlertMessage("Product deleted successfully");
   };
 
   if (loading) return <Spinner />;
@@ -41,15 +43,17 @@ const ProductPage = () => {
 
   return (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
-           {" "}
+     {" "}
       <div className="flex flex-col md:flex-row">
-               {" "}
+                       {" "}
         <div className="md:w-1/2">
                    {" "}
           <img
-            src={product.imageUrls[0] ? product.imageUrls[0] : pathToDefoultImage} // Assuming the product object has an imageUrl field
+            src={
+              product.imageUrls[0] ? product.imageUrls[0] : pathToDefoultImage
+            } // Assuming the product object has an imageUrl field
             alt={product.name}
-            className="rounded-lg mb-4 md:mb-0"
+            className="rounded-lg mb-4 md:mb-0 max-w-xs"
           />
                  {" "}
         </div>
@@ -78,10 +82,10 @@ const ProductPage = () => {
             <div className="flex justify-end mt-4">
                            {" "}
               <button
-                onClick={handleEdit}
+                onClick={() => setIsEditing(!isEditing)}
                 className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700 transition-colors"
               >
-                                Edit              {" "}
+                                {isEditing ? "Hide" : "Edit"}              {" "}
               </button>
                            {" "}
               <button
@@ -97,7 +101,7 @@ const ProductPage = () => {
         </div>
              {" "}
       </div>
-      {/* ... rest of the product details above ... */}
+      <EditProductComponent isOpen={isEditing} product={product} />
       {/* Comments Section */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>

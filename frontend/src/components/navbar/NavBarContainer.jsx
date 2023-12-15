@@ -3,11 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NavBarTab from "./NavBarTab";
 import SearchBar from "./SearchBar";
-import UserService from "../../api/services/UserService.js";
-import { logoutUser } from "../../app/userSlice.js";
-
+import { logoutUserAsync } from "../../app/thunks/userThunks.js";
 const NavBarContainer = () => {
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const { isAuthenticated, username } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -50,8 +48,7 @@ const NavBarContainer = () => {
 
   const handleLogout = async () => {
     try {
-      dispatch(logoutUser());
-      await UserService.logUserOut();
+      dispatch(logoutUserAsync());
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -63,6 +60,13 @@ const NavBarContainer = () => {
     <nav className="bg-white shadow-lg py-2">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
+          {isAuthenticated && username && (
+            <div className="text-lg font-semibold">
+              <span className="bg-green-200 text-green-800 py-1 px-3 rounded-full">
+                Hello, {username}!
+              </span>
+            </div>
+          )}
           {/* Primary Nav Items */}
           <div className="flex space-x-4">
             {primaryNavItems.map((item) => (

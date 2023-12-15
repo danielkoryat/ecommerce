@@ -1,4 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  loginUserAsync,
+  checkUserAuthAsync,
+  createUserAsync,
+  logoutUserAsync,
+} from "./thunks/userThunks.js";
 
 export const userSlice = createSlice({
   name: "user",
@@ -6,20 +12,50 @@ export const userSlice = createSlice({
     username: null,
     email: null,
     isAuthenticated: false,
+    loading: false,
+    serverError: null,
   },
   reducers: {
-    loginUser: (state, action) => {
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.isAuthenticated = true;
+    resetServerError: (state) => {
+      state.serverError = null;
     },
-    logoutUser: (state) => {
-      state.username = null;
-      state.email = null;
-      state.isAuthenticated = false;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUserAsync.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUserAsync.fulfilled, (state, action) => {
+        state.username = action.payload.username;
+        state.email = action.payload.email;
+        state.isAuthenticated = true;
+        state.loading = false;
+      })
+      .addCase(loginUserAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.serverError = action.payload;
+      })
+      .addCase(logoutUserAsync.fulfilled, (state) => {
+        state.username = null;
+        state.email = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(createUserAsync.pending, (state) => {
+        state.loading = true;
+        state.serverError = null;
+      })
+      .addCase(createUserAsync.fulfilled, (state, action) => {
+        state.username = action.payload.username;
+        state.email = action.payload.email;
+        state.isAuthenticated = true;
+        state.loading = false;
+      })
+      .addCase(createUserAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.serverError = action.payload;
+      });
   },
 });
 
-export const { loginUser, logoutUser } = userSlice.actions;
+export const { resetServerError } = userSlice.actions;
 export default userSlice.reducer;

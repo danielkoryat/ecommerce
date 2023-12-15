@@ -2,8 +2,7 @@ import { useState } from "react";
 import { getErrorMessage } from "../errors/errorHandler.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "../app/userSlice.js";
-
+import { logoutUserAsync } from "../app/thunks/userThunks.js";
 function useFetch(apiCallFunction, customErrorContext) {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -19,7 +18,7 @@ function useFetch(apiCallFunction, customErrorContext) {
       return result; 
     } catch (err) {
       if (err.response.status === 401) {
-        dispatch(logoutUser());
+        dispatch(logoutUserAsync());
         navigate("/login");
       }
       const errorMessage = getErrorMessage(err.response, customErrorContext);

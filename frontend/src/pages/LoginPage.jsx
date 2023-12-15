@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import UserService from "../api/services/UserService.js";
-import { useNavigate } from "react-router-dom";
 import Spinner from "../components/spinner";
-import {  errorContext } from "../errors/errorHandler.js";
-import { loginUser } from "../app/userSlice.js";
+import { loginUserAsync } from "../app/thunks/userThunks.js";
 import { useSelector, useDispatch } from "react-redux";
-import useFetch from "../hooks/useFetch.js";
+import { resetServerError } from "../app/userSlice.js";
+
+
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, serverError, fetchData } = useFetch(
-    UserService.loginUser,
-    errorContext.login
-  );
+  const loading = useSelector((state) => state.user.loading);
+  const serverError = useSelector((state) => state.user.serverError);
+
+  useEffect(() => {
+    dispatch(resetServerError());
+  }, [dispatch]);
 
   const {
     register,
-    setError,
     clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (userData) => {
-    const data = await fetchData(userData);
-    if (data) {
-      dispatch(loginUser(data));
-      navigate("/");
-    } 
+    dispatch(loginUserAsync(userData));
   };
 
   return (

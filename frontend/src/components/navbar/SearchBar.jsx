@@ -4,7 +4,7 @@ const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (event) => {
-    // Implement your search logic here
+    //TODO Implement your search logic here
     console.log("Searching for:", searchTerm);
     event.preventDefault();
   };
