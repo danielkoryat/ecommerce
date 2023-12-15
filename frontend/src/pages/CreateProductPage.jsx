@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import productService from "../api/services/ProductService";
-import { getErrorMessage, errorContext } from "../errors/errorHandler";
+import { errorContext } from "../errors/errorHandler";
 import Spinner from "../components/spinner";
 import usefetch from "../hooks/useFetch";
+import { useSelector } from "react-redux";
 
 export default function CreateProductPage() {
   const [secsessMessage, setSuccessMessage] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const { categories } = useSelector((state) => state.category.categories);
   const { loading, serverError, fetchData, clearServerError } = usefetch(
     productService.createProduct,
     errorContext.product
   );
-  useEffect(() => {
-    document.title = "Create Product";
-  }, []);
+
+  const handleCategoryChange = (selectedOptions) => {
+    setSelectedCategories(selectedOptions);
+    setValue(
+      "categories",
+      selectedOptions.map((option) => option.value)
+    );
+  };
 
   const {
     register,
+    setValue,
     handleSubmit,
     setError,
     formState: { errors },
@@ -30,30 +39,21 @@ export default function CreateProductPage() {
         Array.from(value).forEach((file) => {
           productData.append(key, file);
         });
+      } else if (key === "categories" && Array.isArray(value)) {
+        // Append each category value separately
+        value.forEach((category) => {
+          productData.append(`${key}[]`, category);
+        });
       } else {
         productData.append(key, value);
       }
     }
-
-    if ([...productData.entries()].length === 0) {
-      console.log("No data to submit");
-      return;
-    }
-    console.log([...productData.entries()]);
-
-    const data = await fetchData(productService.createProduct(productData));
+    const data = await fetchData(productData);
     if (data) {
       console.log(data);
       setSuccessMessage("Product created successfully");
     }
   };
-
-  const categoriesOptions = [
-    { value: "electronics", label: "Electronics" },
-    { value: "jewelery", label: "Jewelery" },
-    { value: "men's clothing", label: "Men's Clothing" },
-    { value: "women's clothing", label: "Women's Clothing" },
-  ];
 
   return (
     <div className="container mx-auto p-4">
@@ -155,16 +155,18 @@ export default function CreateProductPage() {
           >
             Category
           </label>
+
           <Select
-            id="categories"
-            options={categoriesOptions}
             isMulti
+            options={categories.map((cat) => ({
+              label: cat.name,
+              value: cat._id,
+            }))}
             className="text-gray-700 leading-tight"
             classNamePrefix="select"
+            value={selectedCategories}
+            onChange={handleCategoryChange}
           />
-          {errors.categories && (
-            <p className="text-red-500">Please select at least one category.</p>
-          )}
         </div>
 
         {/* Image Upload */}

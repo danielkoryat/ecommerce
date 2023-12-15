@@ -9,8 +9,7 @@ import { resetServerError } from "../app/userSlice.js";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.user.loading);
-  const serverError = useSelector((state) => state.user.serverError);
+  const {loading, serverError} = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(resetServerError());
