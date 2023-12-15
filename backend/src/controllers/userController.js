@@ -10,7 +10,7 @@ export const login = asyncWrapper(async (req, res) => {
   }
 
   setTokenCookie(res,req, user);
-  return res.status(200).json({ success: true});
+  return res.status(200).json({user: userService.sanitizeUser(user)});
 });
 
 export const checkUserAuth = asyncWrapper(async (req, res) => {
@@ -19,7 +19,7 @@ export const checkUserAuth = asyncWrapper(async (req, res) => {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
   const user = jwt.verify(token, process.env.JWT_SECRET);
-  return res.status(200).json({ success: true, user });
+  return res.status(200).json({  user: userService.sanitizeUser(user) });
 });
 
 export const signup = asyncWrapper(async (req, res) => {
