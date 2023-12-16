@@ -10,7 +10,6 @@ function useFetch(apiCallFunction, customErrorContext) {
   const dispatch = useDispatch();
 
 
-  // Define a fetch function that can be called manually
   const fetchData = async (...fetchParams) => {
     setLoading(true);
     try {

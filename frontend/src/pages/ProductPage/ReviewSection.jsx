@@ -1,6 +1,14 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+import {useFetch} from '../../hooks/useFetch'
+import reviewService from '../../api/services/ReviewService'
+import { errorContext } from '../../errors/errorHandler';
 
-const CommentsSection = ({ productId }) => {
+const ReviewSection = ({ productId }) => {
+  const { loading, serverError, fetchData } = useFetch(
+    reviewService.getProductReviews,
+    errorContext.review
+    
+  )
 
   return (
     <div className="space-y-4">
@@ -20,4 +28,4 @@ const CommentsSection = ({ productId }) => {
   );
 };
 
-export default CommentsSection;
+export default ReviewSection;

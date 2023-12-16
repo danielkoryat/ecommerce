@@ -28,7 +28,6 @@ export default function CreateProductPage() {
     register,
     setValue,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm();
 
@@ -50,7 +49,6 @@ export default function CreateProductPage() {
     }
     const data = await fetchData(productData);
     if (data) {
-      console.log(data);
       setSuccessMessage("Product created successfully");
     }
   };

@@ -1,13 +1,19 @@
-
 export const errorContext = {
   login: "login",
   register: "register",
   logout: "logout",
   product: "product",
+  review: "review",
 };
 
-
-
+const HTTP_STATUS = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  INTERNAL_SERVER_ERROR: 500,
+};
 
 export const getErrorMessage = (response, context) => {
   if (!response) {
@@ -15,39 +21,38 @@ export const getErrorMessage = (response, context) => {
   }
   
   const status = response.status;
-  let message = response.data?.message || "";
+  const defaultMessage = "An unexpected error occurred. Please try again later.";
+  let message = response.data?.message || defaultMessage;
 
   switch (status) {
-    case 400:
+    case HTTP_STATUS.BAD_REQUEST:
       return "Invalid request. Please check your input.";
 
-    case 401:
-      if (context === 'login') {
-        return "Invalid username or password. Please try again.";
-      } else {
-        return "Unauthorized. Please log in again.";
-      }
+    case HTTP_STATUS.UNAUTHORIZED:
+      return context === errorContext.login ?
+        "Invalid username or password. Please try again." :
+        "Unauthorized. Please log in again.";
 
-    case 403:
+    case HTTP_STATUS.FORBIDDEN:
       return "Forbidden. You don't have permission to perform this action.";
 
-    case 404:
+    case HTTP_STATUS.NOT_FOUND:
       return "The requested resource was not found.";
 
-    case 409:
-      if (context === 'register') {
+    case HTTP_STATUS.CONFLICT:
+      if (context === errorContext.register) {
         if (message.includes("email")) {
-          return "this email already exists.";
+          return "This email already exists.";
         } else if (message.includes("username")) {
-          return "this username already exists.";
+          return "This username already exists.";
         }
       }
       return message;
 
-    case 500:
+    case HTTP_STATUS.INTERNAL_SERVER_ERROR:
       return "Internal server error. Please try again later.";
 
     default:
-      return message || "An unexpected error occurred.";
+      return message;
   }
 };
