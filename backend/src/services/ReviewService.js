@@ -16,7 +16,6 @@ class ReviewService {
       throw new CustomError(error.details[0].message, 400);
     }
 
-    // If validation is successful, proceed with review creation
     const review = await Review.create({
       ...reviewData,
       user: userId,

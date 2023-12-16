@@ -5,7 +5,7 @@ import ProductService from "../../api/services/ProductService";
 import { errorContext } from "../../errors/errorHandler";
 import Spinner from "../../components/spinner";
 import NoProductsNotification from "../../components/NoProductNotification";
-import CommentsSection from "./CommentsSection";
+import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
 import Alert from "../../components/Alert";
 
@@ -51,7 +51,7 @@ const ProductPage = () => {
           <img
             src={
               product.imageUrls[0] ? product.imageUrls[0] : pathToDefoultImage
-            } // Assuming the product object has an imageUrl field
+            } 
             alt={product.name}
             className="rounded-lg mb-4 md:mb-0 max-w-xs"
           />
@@ -74,7 +74,7 @@ const ProductPage = () => {
           </p>
                    {" "}
           <p className="text-gray-600 text-sm mb-4">
-                        Created At:{" "}
+                        Posted At:{" "}
             {new Date(product.createdAt).toLocaleDateString()}         {" "}
           </p>
                    {" "}
