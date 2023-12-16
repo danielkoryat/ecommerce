@@ -14,6 +14,7 @@ import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ProductPage from "./pages/ProductPage/PageContainer.jsx";
+import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
