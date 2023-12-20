@@ -21,7 +21,6 @@ class UserService {
     const user = await User.findOne({ username });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      // Use generic error message for security
       throw new CustomError("Invalid username or password", 401);
     }
 

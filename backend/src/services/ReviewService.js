@@ -1,35 +1,31 @@
-import Review from "../models/Review";
-import CustomError from "../errors/customeError.js";
+import Review from "../models/Review.js";
+import CustomError from "../errors/customError.js";
 import Joi from "joi";
 import JoiObjectId from "joi-objectid";
+import { getRevieScheme } from "../utils/validateHelpers.js";
 
 class ReviewService {
-  async createReview(reviewData, userId) {
-    // Validate the reviewData against the schema
-    const { error } = Joi.object({
-      product: JoiObjectId(Joi).required(),
-      rating: Joi.number().required(),
-      comment: Joi.string().required(),
-    }).validate(reviewData);
-
-    if (error) {
-      throw new CustomError(error.details[0].message, 400);
-    }
-
+  async createReview(reviewData) {
     const review = await Review.create({
-      ...reviewData,
-      user: userId,
+      user: reviewData.userId,
+      product: reviewData.productId,
+      rating: reviewData.rating,
+      comment: reviewData.comment,
     });
-
+  
     return review;
   }
 
-  async getReviewById(reviewId) {
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      throw new CustomError("Review not found", 404);
-    }
-    return review;
+  async getReviewByProductId(productId) {
+    const reviews = await Review.find({ product: productId });
+    return reviews;
+  }
+
+   getReviewerName = async(review) => {
+    const reviewToReturn = review.toJSON();
+    const user = await Review.findById(review.user);
+    reviewToReturn.username = user ? user.username : 'Unknown';
+    return reviewToReturn;
   }
 
   async deleteReview(reviewId) {
@@ -40,20 +36,26 @@ class ReviewService {
     return review;
   }
 
-  async updateReview(reviewId, reviewData) {
-    // Validate the reviewData against the schema
-    const { error } = Joi.object({
-      product: JoiObjectId(Joi).optional(),
-      rating: Joi.number().optional(),
-      comment: Joi.string().optional(),
-    }).validate(reviewData);
+  validateReview(reviewData) {
+    const schema = getRevieScheme();
+    const { error } = schema.validate(reviewData);
 
     if (error) {
       throw new CustomError(error.details[0].message, 400);
     }
-    const review = await Review.findByIdAndUpdate(reviewId, reviewData, {
-      new: true,
-    });
+  }
+
+  async updateReview({ reviewId, comment, rating }) {
+    this.validateReview({ reviewId, comment, rating });
+
+    const review = await Review.findByIdAndUpdate(
+      reviewId,
+      { comment, rating },
+      {
+        new: true,
+      }
+    );
+
     if (!review) {
       throw new CustomError("Review not found", 404);
     }
@@ -75,7 +77,6 @@ class ReviewService {
     }
     return reviews;
   }
-
 }
 
 export default new ReviewService();

@@ -10,6 +10,7 @@ import notFound from "./src/middlewares/notFound.js";
 import userRouter from "./src/routes/user.js";
 import productRouter from "./src/routes/product.js";
 import categoryRouter from "./src/routes/category.js";
+import reviewRouter from "./src/routes/review.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(`${BASE_URL}/user`, userRouter);
 app.use(`${BASE_URL}/product`, productRouter);
 app.use(`${BASE_URL}/category`, categoryRouter);
+app.use(`${BASE_URL}/review`, reviewRouter);
 
 app.use(notFound);
 app.use(errorHandler);

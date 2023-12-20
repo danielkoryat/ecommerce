@@ -12,7 +12,7 @@ export const getProductSchema = () => {
       .valid("image/jpeg", "image/png", "image/gif", "image/bmp")
       .required(),
     buffer: Joi.binary().required(),
-    size: Joi.number().integer().min(1).required(), 
+    size: Joi.number().integer().min(1).required(),
   });
 
   const productSchema = Joi.object({
@@ -26,4 +26,17 @@ export const getProductSchema = () => {
   });
 
   return productSchema;
+};
+
+export const getRevieScheme = () => {
+  Joi.objectId = JoiObjectId(Joi);
+
+  const schema = Joi.object({
+    productId:  Joi.objectId().required(),
+    rating: Joi.number().required(),
+    comment: Joi.string().required(),
+    userId:  Joi.objectId().required(),
+  });
+
+  return schema;
 };

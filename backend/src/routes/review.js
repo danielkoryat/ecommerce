@@ -15,13 +15,18 @@ router
   .route("/:id")
   .get(getReviewById)
   .patch(cookieJwtAuth, updateReview)
-  .delete(cookieJwtAuth, deleteReview)
+  .delete(cookieJwtAuth, deleteReview);
+  
 
+router
   .route("/")
-  .post(cookieJwtAuth, createReview)
+  .post(cookieJwtAuth, createReview);
 
+router
   .route("/user/:userId")
-  .get(getReviewsByUser)
+  .get(getReviewsByUser);
+
+router
   .route("/product/:productId")
   .get(getReviewsByProduct);
 
