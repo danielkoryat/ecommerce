@@ -2,7 +2,7 @@ import React from 'react';
 
 const NoProductsNotification = ({context}) => {
 
-  const mainMessage = context === 'shop' ? 'No Products Available' : 'We Couldnt Find that Products';
+  const mainMessage = context === 'shop' ? 'No Products Available' : 'We Couldnt Find that Product';
   const subMessage = context === 'shop' ? 'Were sorry, but there are no products available at the moment. Please check back later.'
    : 'Sorry but that product you are looking for could not be found. Please check back later. if you think this is an error, please contact us.';
 

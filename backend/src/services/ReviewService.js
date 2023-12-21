@@ -6,26 +6,32 @@ import { getRevieScheme } from "../utils/validateHelpers.js";
 
 class ReviewService {
   async createReview(reviewData) {
+    this.validateReview(reviewData);
+
     const review = await Review.create({
       user: reviewData.userId,
       product: reviewData.productId,
       rating: reviewData.rating,
       comment: reviewData.comment,
     });
-  
-    return review;
+
+    const populatedReview = await Review.findById(review._id).populate(
+      "user",
+      "username"
+    );
+
+    return populatedReview;
   }
 
-  async getReviewByProductId(productId) {
-    const reviews = await Review.find({ product: productId });
+  async getReviewsByProduct(productId) {
+    const reviews = await Review.find({ product: productId }).populate(
+      "user",
+      "username"
+    );
+    if (!reviews) {
+      throw new CustomError("Reviews not found", 404);
+    }
     return reviews;
-  }
-
-   getReviewerName = async(review) => {
-    const reviewToReturn = review.toJSON();
-    const user = await Review.findById(review.user);
-    reviewToReturn.username = user ? user.username : 'Unknown';
-    return reviewToReturn;
   }
 
   async deleteReview(reviewId) {
@@ -64,14 +70,6 @@ class ReviewService {
 
   async getReviewsByUser(userId) {
     const reviews = await Review.find({ user: userId });
-    if (!reviews) {
-      throw new CustomError("Reviews not found", 404);
-    }
-    return reviews;
-  }
-
-  async getReviewsByProduct(productId) {
-    const reviews = await Review.find({ product: productId });
     if (!reviews) {
       throw new CustomError("Reviews not found", 404);
     }

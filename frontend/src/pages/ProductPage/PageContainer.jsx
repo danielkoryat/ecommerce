@@ -19,7 +19,6 @@ const ProductPage = () => {
     errorContext.product
   );
 
-  const [alertMessage, setAlertMessage] = useState(null);
   const isSeller = true;
   //TODO find a global way to acsess this
   const pathToDefoultImage = "../images/default-product-image.png";

@@ -4,10 +4,8 @@ import ReviewService from "../services/ReviewService.js";
 export const createReview = asyncWrapper(async (req, res) => {
   const userId = req.user.id;
   const data = { ...req.body, userId };
-  ReviewService.validateReview(data);
   const review = await ReviewService.createReview(data);
-  const reviwToReturn = await ReviewService.getReviewerName(review);
-  res.status(201).send({ review: reviwToReturn });
+  res.status(201).json(review);
 });
 
 export const getReviewById = asyncWrapper(async (req, res) => {
@@ -32,5 +30,5 @@ export const getReviewsByUser = asyncWrapper(async (req, res) => {
 
 export const getReviewsByProduct = asyncWrapper(async (req, res) => {
   const reviews = await ReviewService.getReviewsByProduct(req.params.productId);
-  res.status(200).json({ success: true, reviews });
+  res.status(200).json(reviews);
 });
