@@ -18,9 +18,9 @@ const ProductPage = () => {
     errorContext.product
   );
 
-  const {userId,isAuthenticated} = useSelector((state) => state.user);
-  const isSeller =
-    typeof product?.seller !== "undefined" && product.seller === userId;
+  const { id, isAuthenticated } = useSelector((state) => state.user);
+  const state = useSelector((state) => state.user);
+  const isSeller = product && product.seller._id === id;
 
   //TODO find a global way to acsess this
   const pathToDefoultImage = "../images/default-product-image.png";
@@ -75,7 +75,8 @@ const ProductPage = () => {
           </p>
           <p className="text-gray-800 font-semibold">
                         Seller:{" "}
-            <span className="text-blue-500">{product.seller.username}</span>         {" "}
+            <span className="text-blue-500">{product.seller.username}</span>   
+                 {" "}
           </p>
                    {" "}
           <p className="text-gray-600 text-sm mb-4">
@@ -110,7 +111,10 @@ const ProductPage = () => {
       {/* Comments Section */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
-        <CommentsSection productId={productId} isAuthenticated={isAuthenticated} />
+        <CommentsSection
+          productId={productId}
+          isAuthenticated={isAuthenticated}
+        />
       </div>
     </div>
   );

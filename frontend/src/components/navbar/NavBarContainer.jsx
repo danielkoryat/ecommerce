@@ -7,7 +7,6 @@ import { logoutUserAsync } from '../../app/thunks/userThunks.js';
 
 const NavBarContainer = () => {
   const { isAuthenticated, username } = useSelector((state) => state.user);
-  const st = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

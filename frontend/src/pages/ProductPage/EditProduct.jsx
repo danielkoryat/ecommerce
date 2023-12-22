@@ -14,14 +14,6 @@ const EditProductComponent = ({ product, isOpen }) => {
     //TODO implamnent edit functionality and categorys
   };
 
-  const categories = [
-    'Electronics',
-    'Clothing',
-    'Shoes',
-    'Accessories',
-    'Sports',
-    'Books',
-  ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="pl-4 py-2">
