@@ -9,9 +9,9 @@ const EditProductComponent = ({ product, isOpen }) => {
     reset(product);
   }, [product, reset]);
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     console.log('Form submitted', data);
-    // Here you would handle the form submission, like updating the product
+    //TODO implamnent edit functionality and categorys
   };
 
   const categories = [
@@ -59,10 +59,6 @@ const EditProductComponent = ({ product, isOpen }) => {
                 placeholder="Amount"
                 className="border-2 border-gray-200 p-2 rounded-md focus:border-blue-300 focus:ring-blue-200 transition"
               />
-
-              {/* Categories would be handled separately, perhaps with another state or context */}
-
-              {/* Save changes (submit) button */}
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-shadow shadow-lg focus:outline-none"

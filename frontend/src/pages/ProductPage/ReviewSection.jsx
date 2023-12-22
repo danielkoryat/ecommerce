@@ -6,7 +6,7 @@ import Review from "../../components/Review";
 import StarRating from "../../components/StartRating.jsx";
 import Spinner from "../../components/Spinner";
 
-const ReviewSection = ({ productId }) => {
+const ReviewSection = ({ productId,isAuthenticated }) => {
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
 
@@ -60,8 +60,7 @@ const ReviewSection = ({ productId }) => {
         </p>
       )}
 
-      <form className="bg-white p-4 rounded-lg shadow" onSubmit={handleSubmit}>
-      
+      {isAuthenticated && <form className="bg-white p-4 rounded-lg shadow" onSubmit={handleSubmit}>    
         <StarRating onRating={setRating} rating={rating} />
         <textarea name="comment" className="w-full h-24 p-2 border border-gray-300 rounded-md resize-none" placeholder="Write a review..."></textarea>
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -69,7 +68,7 @@ const ReviewSection = ({ productId }) => {
         </button>
         {submitting && <Spinner/>}
         {serverError && <p className="text-red-500">{serverError}</p>}
-      </form>
+      </form>}
     </div>
   );
 };

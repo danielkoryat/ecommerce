@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import ProductService from "../../api/services/ProductService";
 import { errorContext } from "../../errors/errorHandler";
-import Spinner from "../../components/spinner";
 import NoProductsNotification from "../../components/NoProductNotification";
+import Spinner from "../../components/Spinner";
 import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
-import Alert from "../../components/Alert";
+import { useSelector } from "react-redux";
 
 const ProductPage = () => {
   const { productId } = useParams();
-  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { loading, serverError, fetchData } = useFetch(
+  const { loading, fetchData } = useFetch(
     ProductService.getProductById,
     errorContext.product
   );
 
-  const isSeller = true;
+  const {userId,isAuthenticated} = useSelector((state) => state.user);
+  const isSeller =
+    typeof product?.seller !== "undefined" && product.seller === userId;
+
   //TODO find a global way to acsess this
   const pathToDefoultImage = "../images/default-product-image.png";
 
@@ -42,7 +44,7 @@ const ProductPage = () => {
 
   return (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
-     {" "}
+           {" "}
       <div className="flex flex-col md:flex-row">
                        {" "}
         <div className="md:w-1/2">
@@ -50,7 +52,7 @@ const ProductPage = () => {
           <img
             src={
               product.imageUrls[0] ? product.imageUrls[0] : pathToDefoultImage
-            } 
+            }
             alt={product.name}
             className="rounded-lg mb-4 md:mb-0 max-w-xs"
           />
@@ -70,6 +72,10 @@ const ProductPage = () => {
           <p className="text-gray-800 font-semibold">
                         Amount:{" "}
             <span className="text-blue-500">{product.amount}</span>         {" "}
+          </p>
+          <p className="text-gray-800 font-semibold">
+                        Seller:{" "}
+            <span className="text-blue-500">{product.seller.username}</span>         {" "}
           </p>
                    {" "}
           <p className="text-gray-600 text-sm mb-4">
@@ -104,7 +110,7 @@ const ProductPage = () => {
       {/* Comments Section */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
-        <CommentsSection productId={productId} />
+        <CommentsSection productId={productId} isAuthenticated={isAuthenticated} />
       </div>
     </div>
   );

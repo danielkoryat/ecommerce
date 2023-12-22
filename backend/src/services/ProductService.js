@@ -1,8 +1,8 @@
 import Joi from "joi";
 import Product from "../models/product.js";
 import CustomError from "../errors/customError.js";
-import { getProductSchema } from "../utils/validateHelpers.js"; 
-import {uploadImagesToAzure} from './AzureStorageService.js'
+import { getProductSchema } from "../utils/validateHelpers.js";
+import { uploadImagesToAzure } from "./AzureStorageService.js";
 
 class ProductService {
   async createProduct(productData) {
@@ -45,7 +45,7 @@ class ProductService {
   }
 
   async getProductById(id) {
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("seller", "username");
     if (!product) {
       throw new CustomError(404, "Product not found");
     }

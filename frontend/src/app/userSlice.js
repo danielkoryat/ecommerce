@@ -1,61 +1,60 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   loginUserAsync,
-  checkUserAuthAsync,
-  createUserAsync,
   logoutUserAsync,
+  createUserAsync,
+  checkUserAuthAsync,
 } from "./thunks/userThunks.js";
+
+const userAuthenticated = (state, { payload }) => {
+  const { username, email, _id } = payload.user;
+  state.username = username;
+  state.email = email;
+  state.isAuthenticated = true;
+  state.id = _id;
+  state.loading = false;
+};
+
+const initialState = {
+  username: null,
+  email: null,
+  id: null,
+  isAuthenticated: false,
+  loading: false,
+  serverError: null,
+};
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: {
-    username: null,
-    email: null,
-    isAuthenticated: false,
-    loading: false,
-    serverError: null,
-  },
+  initialState,
   reducers: {
     resetServerError: (state) => {
       state.serverError = null;
     },
   },
   extraReducers: (builder) => {
+    const pendingAction = (state) => {
+      state.loading = true;
+      state.serverError = null;
+    };
+    const rejectedAction = (state, { payload }) => {
+      state.loading = false;
+      state.serverError = payload;
+    };
+
     builder
-      .addCase(loginUserAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(loginUserAsync.fulfilled, (state, action) => {
-        state.username = action.payload.username;
-        state.email = action.payload.email;
-        state.isAuthenticated = true;
-        state.loading = false;
-      })
-      .addCase(loginUserAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.serverError = action.payload;
-      })
-      .addCase(logoutUserAsync.fulfilled, (state) => {
-        state.username = null;
-        state.email = null;
-        state.isAuthenticated = false;
-      })
-      .addCase(createUserAsync.pending, (state) => {
-        state.loading = true;
-        state.serverError = null;
-      })
-      .addCase(createUserAsync.fulfilled, (state, action) => {
-        state.username = action.payload.username;
-        state.email = action.payload.email;
-        state.isAuthenticated = true;
-        state.loading = false;
-      })
-      .addCase(createUserAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.serverError = action.payload;
-      });
+      .addCase(loginUserAsync.pending, pendingAction)
+      .addCase(loginUserAsync.fulfilled, userAuthenticated)
+      .addCase(loginUserAsync.rejected, rejectedAction)
+      .addCase(logoutUserAsync.fulfilled, () => initialState)
+      .addCase(createUserAsync.pending, pendingAction)
+      .addCase(createUserAsync.fulfilled, userAuthenticated)
+      .addCase(createUserAsync.rejected, rejectedAction)
+      .addCase(checkUserAuthAsync.fulfilled, userAuthenticated)
+      .addCase(checkUserAuthAsync.rejected, rejectedAction);
   },
 });
 
 export const { resetServerError } = userSlice.actions;
+
 export default userSlice.reducer;

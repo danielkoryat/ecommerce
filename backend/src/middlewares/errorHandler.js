@@ -3,36 +3,36 @@ import CustomError from "../errors/customError.js";
 import jwt from "jsonwebtoken";
 
 const errorHandler = (err, req, res, next) => {
+  let status = 500; // Default to internal server error
+  let message = "Internal Server Error";
+
   // Duplicate key error (e.g., when creating a user with an existing username)
   if (err.code === 11000) {
-    return res.status(409).json({ message: err.message });
+    status = 409;
+    message = err.message;
   }
-
   // Custom error handling
-  if (err instanceof CustomError) {
-    // Assuming CustomeError class has a `statusCode` property you can use
-    return res.status(err.statusCode).json({ message: err.message });
+  else if (err instanceof CustomError) {
+    status = err.statusCode;
+    message = err.message;
   }
-
   // Mongoose validation error (e.g., missing required fields)
-  if (err instanceof mongoose.Error.ValidationError) {
-    return res.status(400).json({ message: err.message });
+  else if (err instanceof mongoose.Error.ValidationError) {
+    status = 400;
+    message = err.message;
+  }
+  // Unauthorized errors (e.g., invalid token or no token)
+  else if (err instanceof jwt.JsonWebTokenError || err.name === "UnauthorizedError") {
+    status = 401;
+    message = "Unauthorized";
+  }
+  // Resource not found error
+  else if (err instanceof mongoose.Error.DocumentNotFoundError) {
+    status = 404;
+    message = "Resource not found";
   }
 
-  if (err.name === "UnauthorizedError") {
-    // Replace with your actual error name
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  if (err instanceof mongoose.Error.DocumentNotFoundError) {
-    return res.status(404).json({ message: "Resource not found" });
-  }
-
-  if (err instanceof jwt.JsonWebTokenError) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  return res.status(500).json({ message: "Internal Server Error" });
+  res.status(status).json({ message });
 };
 
 export default errorHandler;
