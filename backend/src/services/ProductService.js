@@ -52,6 +52,13 @@ class ProductService {
 
     return product;
   }
+
+  async deleteProduct(id) {
+    const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      throw new CustomError(404, "Product not found");
+    }
+  }
 }
 
 export default new ProductService();

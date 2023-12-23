@@ -14,6 +14,7 @@ import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ProductPage from "./pages/ProductPage/PageContainer.jsx";
+import Alert from "./components/Alert.jsx";
 import "./App.css";
 
 function App() {
@@ -22,8 +23,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchCategories());
   }, []);
-
-  const categories = useSelector((state) => state.category.categories);
 
   const publicRoutes = [
     { path: "/login", element: <Login /> },
@@ -37,7 +36,10 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <header>
+        <Alert />
+        <Navbar />
+      </header>
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -56,7 +58,9 @@ function App() {
           </Route>
         </Routes>
       </main>
-      <Footer />
+      <footer>
+        <Footer />
+      </footer>
     </Router>
   );
 }

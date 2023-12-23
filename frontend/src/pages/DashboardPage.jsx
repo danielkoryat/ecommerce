@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import { useDispatch } from "react-redux";
+import {setAlert} from '../app/alertSlice'
 const DashboardPage = () => {
   // State to hold the list of products and user info
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [userInfo, setUserInfo] = useState({
     email: "user@example.com",
@@ -53,6 +55,9 @@ const DashboardPage = () => {
   const submitUserInfo = () => {
     // Submit the new user info to the server
     console.log("Updated user info:", userInfo);
+    dispatch(setAlert({ type: "success", message: "User info updated successfully" }));
+    
+    
     // You would replace the above line with your actual API call
   };
 

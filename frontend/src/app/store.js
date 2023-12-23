@@ -2,19 +2,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage
+import storage from 'redux-persist/lib/storage'; 
 import userReducer from './userSlice';
 import categoryReducer from './categorySlice';
+import alertReducer from './alertSlice';
 
 const reducers = combineReducers({
   user: userReducer,
   category: categoryReducer,
+  alert: alertReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'category'],
+  whitelist: ['user', 'category', 'alert'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

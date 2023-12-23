@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearAlert } from '../app/alertSlice';
 import PropTypes from 'prop-types';
 import { Transition } from '@headlessui/react';
 
-const Alert = ({ message, type }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  // Define color classes based on the type of alert
-  const colorClasses = type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+const Alert = () => {
+  const { message, type, isOpen } = useSelector((state) => state.alert);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (message) {
-      // Show the alert
-      setIsOpen(true);
-      // Set a timeout to hide the alert after 3 seconds
+    if (isOpen) {
       const timer = setTimeout(() => {
-        setIsOpen(false);
+        dispatch(clearAlert());
       }, 3000);
-      // Clear the timeout if the component is unmounted
       return () => clearTimeout(timer);
     }
-  }, [message]);
+  }, [isOpen, dispatch]);
 
-  // If there's no message, don't render the component
-  if (!message) {
+  if (!isOpen) {
     return null;
   }
+
+  const colorClasses = type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
 
   return (
     <Transition
@@ -42,7 +40,7 @@ const Alert = ({ message, type }) => {
         <div className="flex justify-between items-center">
           <span>{message}</span>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => dispatch(clearAlert())}
             className="text-lg font-semibold"
           >
             &times;

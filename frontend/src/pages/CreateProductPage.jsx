@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import productService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
-import Spinner from "../components/spinner";
+import Spinner from "../components/Spinner";
 import usefetch from "../hooks/useFetch";
 import { useSelector } from "react-redux";
 
@@ -27,6 +27,7 @@ export default function CreateProductPage() {
   const {
     register,
     setValue,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -50,6 +51,7 @@ export default function CreateProductPage() {
     const data = await fetchData(productData);
     if (data) {
       setSuccessMessage("Product created successfully");
+      reset();
     }
   };
 

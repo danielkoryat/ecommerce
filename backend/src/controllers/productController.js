@@ -21,6 +21,12 @@ export const getProductById = asyncWrapper(async (req, res) => {
   res.status(200).json(product);
 });
 
+export const deleteProduct = asyncWrapper(async (req, res) => {
+  const { id: receivedId } = req.params;
+  ProductService.deleteProduct(receivedId);
+  res.status(200).json({ success: true, message: "Product deleted successfully" });
+})
+
 export const getProducts = asyncWrapper(async (req, res) => {
   const page = req.query.page;
 

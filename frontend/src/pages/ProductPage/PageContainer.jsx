@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import ProductService from "../../api/services/ProductService";
 import { errorContext } from "../../errors/errorHandler";
@@ -7,19 +7,29 @@ import NoProductsNotification from "../../components/NoProductNotification";
 import Spinner from "../../components/Spinner";
 import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setAlert } from "../../app/alertSlice";
 
 const ProductPage = () => {
   const { productId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [product, setProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+
   const { loading, fetchData } = useFetch(
     ProductService.getProductById,
     errorContext.product
   );
 
+  const {
+    loading: deleteLoading,
+    error: deleteError,
+    fetchData: deleteProduct,
+  } = useFetch(ProductService.deleteProduct, errorContext.product);
+
   const { id, isAuthenticated } = useSelector((state) => state.user);
-  const state = useSelector((state) => state.user);
   const isSeller = product && product.seller._id === id;
 
   //TODO find a global way to acsess this
@@ -35,8 +45,15 @@ const ProductPage = () => {
   }, [productId]);
 
   const handleDelete = async () => {
-    //TODO Implement delete functionality
-    setAlertMessage("Product deleted successfully");
+    const data = await deleteProduct(productId);
+    if (!data) {
+      dispatch(setAlert({ type: "error", message: deleteError.message }));
+    } else {
+      navigate("/");
+      dispatch(
+        setAlert({ type: "success", message: "Product deleted successfully" })
+      );
+    }
   };
 
   if (loading) return <Spinner />;
@@ -100,7 +117,9 @@ const ProductPage = () => {
               >
                                 Delete              {" "}
               </button>
-                         {" "}
+              {deleteLoading && <Spinner />}
+              {deleteError && <p className="text-red-500">{deleteError}</p>}   
+                     {" "}
             </div>
           )}
                  {" "}
