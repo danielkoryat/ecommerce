@@ -7,7 +7,7 @@ import {
 } from "./thunks/userThunks.js";
 
 const userAuthenticated = (state, { payload }) => {
-  const { username, email, _id } = payload.user;
+  const { username, email, _id } = payload;
   state.username = username;
   state.email = email;
   state.isAuthenticated = true;
