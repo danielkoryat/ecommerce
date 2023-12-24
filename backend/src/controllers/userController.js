@@ -1,16 +1,15 @@
 import userService from "../services/UserService.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
-import { setTokenCookie } from "../utils/authUtils.js";
+import { setTokensCookies, clearTokensCookies } from "../utils/authUtils.js";
 import jwt from "jsonwebtoken";
 
 export const login = asyncWrapper(async (req, res) => {
   const user = await userService.validateUser(req.body);
-  if (!user) {
-    return res.status(401).json({ success: false, message: "Invalid credentials" });
-  }
 
-  setTokenCookie(res,req, user);
-  return res.status(200).json({user: userService.sanitizeUser(user)});
+  const sanitizedUser = userService.sanitizeUser(user);
+  setTokensCookies(res, req, sanitizedUser);
+
+  return res.status(200).json(sanitizedUser);
 });
 
 export const checkUserAuth = asyncWrapper(async (req, res) => {
@@ -24,19 +23,14 @@ export const checkUserAuth = asyncWrapper(async (req, res) => {
 
 export const signup = asyncWrapper(async (req, res) => {
   const user = await userService.createUser( req.body);
+  const sanitizedUser = userService.sanitizeUser(user);
 
-  setTokenCookie(res,req, user);
-  res.status(201).json({ success: true, user: userService.sanitizeUser(user) });
+  setTokensCookies(res,req, sanitizedUser);
+  res.status(201).json({ success: true, user: sanitizedUser });
 });
 
 export const logout = asyncWrapper(async (req, res) => {
-  res.cookie("token", "", {
-    httpOnly: true,
-    expires: new Date(0), 
-    maxAge: 0,
-    sameSite: "none",
-    secure: true,
-  });
+  clearTokensCookies(res);
   res.status(200).json({ success: true });
 });
 

@@ -35,7 +35,7 @@ class UserService {
       userToSend = { ...user };
     }
 
-    delete userToSend.password; // Remove the password before sending it to the client
+    delete userToSend.password; 
     return userToSend;
   };
 
