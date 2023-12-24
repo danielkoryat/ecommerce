@@ -13,6 +13,7 @@ import CreateProductPage from "./pages/CreateProductPage.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import WatchlistPage from "./pages/WatchlistPage.jsx";
 import ProductPage from "./pages/ProductPage/PageContainer.jsx";
 import Alert from "./components/Alert.jsx";
 import "./App.css";
@@ -32,6 +33,7 @@ function App() {
   const privateRoutes = [
     { path: "/sell", element: <CreateProductPage /> },
     { path: "/dashboard", element: <DashboardPage /> },
+    { path: "/watchlist", element: <WatchlistPage /> },
   ];
 
   return (
