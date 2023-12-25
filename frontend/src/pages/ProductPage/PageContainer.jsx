@@ -9,12 +9,16 @@ import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
 import { useSelector, useDispatch } from "react-redux";
 import { setAlert } from "../../app/alertSlice";
+import ProductDisplay from "./ProductDisplay";
+
+const PATH_TO_DEFAULT_IMAGE = "../../../public/images/default-product-image.png"; 
 
 const ProductPage = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
+  const { id, isAuthenticated } = useSelector((state) => state.user);
   const [product, setProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -29,11 +33,6 @@ const ProductPage = () => {
     fetchData: deleteProduct,
   } = useFetch(ProductService.deleteProduct, errorContext.product);
 
-  const { id, isAuthenticated } = useSelector((state) => state.user);
-  const isSeller = product && product.seller._id === id;
-
-  //TODO find a global way to acsess this
-  const pathToDefoultImage = "../images/default-product-image.png";
 
   useEffect(() => {
     const getProduct = async () => {
@@ -42,18 +41,20 @@ const ProductPage = () => {
     };
 
     getProduct();
-  }, [productId]);
+  }, [productId, fetchData]);
 
   const handleDelete = async () => {
     const data = await deleteProduct(productId);
     if (!data) {
       dispatch(setAlert({ type: "error", message: deleteError.message }));
     } else {
-      navigate("/");
-      dispatch(
-        setAlert({ type: "success", message: "Product deleted successfully" })
-      );
+      navigate("/shop");
+      dispatch(setAlert({ type: "success", message: "Product deleted successfully" }));
     }
+  };
+
+  const handleAddToWatchlist = () => {
+    // Implementation for adding product to watchlist
   };
 
   if (loading) return <Spinner />;
@@ -61,80 +62,20 @@ const ProductPage = () => {
 
   return (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
-           {" "}
-      <div className="flex flex-col md:flex-row">
-                       {" "}
-        <div className="md:w-1/2">
-                   {" "}
-          <img
-            src={
-              product.imageUrls[0] ? product.imageUrls[0] : pathToDefoultImage
-            }
-            alt={product.name}
-            className="rounded-lg mb-4 md:mb-0 max-w-xs"
-          />
-                 {" "}
-        </div>
-               {" "}
-        <div className="md:w-1/2 md:pl-8">
-                    <h1 className="text-4xl font-bold mb-4">{product.name}</h1> 
-                 {" "}
-          <p className="text-gray-700 text-lg mb-4">{product.description}</p>   
-               {" "}
-          <p className="text-gray-800 font-semibold">
-                        Price:{" "}
-            <span className="text-green-500">${product.price}</span>         {" "}
-          </p>
-                   {" "}
-          <p className="text-gray-800 font-semibold">
-                        Amount:{" "}
-            <span className="text-blue-500">{product.amount}</span>         {" "}
-          </p>
-          <p className="text-gray-800 font-semibold">
-                        Seller:{" "}
-            <span className="text-blue-500">{product.seller.username}</span>   
-                 {" "}
-          </p>
-                   {" "}
-          <p className="text-gray-600 text-sm mb-4">
-                        Posted At:{" "}
-            {new Date(product.createdAt).toLocaleDateString()}         {" "}
-          </p>
-                   {" "}
-          {isSeller && (
-            <div className="flex justify-end mt-4">
-                           {" "}
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700 transition-colors"
-              >
-                                {isEditing ? "Hide" : "Edit"}              {" "}
-              </button>
-                           {" "}
-              <button
-                onClick={handleDelete}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
-              >
-                                Delete              {" "}
-              </button>
-              {deleteLoading && <Spinner />}
-              {deleteError && <p className="text-red-500">{deleteError}</p>}   
-                     {" "}
-            </div>
-          )}
-                 {" "}
-        </div>
-             {" "}
-      </div>
+      <ProductDisplay
+        product={product}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        handleDelete={handleDelete}
+        deleteLoading={deleteLoading}
+        deleteError={deleteError}
+        handleAddToWatchlist={handleAddToWatchlist}
+        isAuthenticated={isAuthenticated}
+        isSeller={id === product?.seller._id}
+        pathToDefaultImage={PATH_TO_DEFAULT_IMAGE}
+      />
       <EditProductComponent isOpen={isEditing} product={product} />
-      {/* Comments Section */}
-      <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
-        <CommentsSection
-          productId={productId}
-          isAuthenticated={isAuthenticated}
-        />
-      </div>
+      <CommentsSection productId={productId} isAuthenticated={isAuthenticated} />
     </div>
   );
 };
