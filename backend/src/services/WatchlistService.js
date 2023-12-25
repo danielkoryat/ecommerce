@@ -9,7 +9,6 @@ class WatchlistService {
       watchlist.products.push(productId);
       await watchlist.save();
     } else {
-      // Create a new watchlist
       const newWatchlist = new Watchlist({
         userId,
         products: [productId],
@@ -41,9 +40,6 @@ class WatchlistService {
 
   async getUserWatchlist(userId) {
     const watchlist = await Watchlist.findOne({ userId });
-    if (!watchlist) {
-      throw new CustomeError("Watchlist not found", 404);
-    }
     return watchlist;
   }
 }

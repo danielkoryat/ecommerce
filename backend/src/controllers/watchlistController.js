@@ -1,11 +1,10 @@
 import asyncWrapper from "../middlewares/asyncWrapper";
-import watchlistService from "../services/watchlistService";
-
+import WatchlistService from "../services/WatchlistService";
 
 export const addToWatchlist = asyncWrapper(async (req, res) => {
   const { id: receivedId } = req.params;
   const { productId } = req.body;
-  const watchlist = watchlistService.addProductToWatchlist(
+  const watchlist = WatchlistService.addProductToWatchlist(
     receivedId,
     productId
   );
@@ -15,7 +14,7 @@ export const addToWatchlist = asyncWrapper(async (req, res) => {
 export const removeFromWatchlist = asyncWrapper(async (req, res) => {
   const { id: receivedId } = req.params;
   const { productId } = req.body;
-  const watchlist = watchlistService.removeProductFromWatchlist(
+  const watchlist = WatchlistService.removeProductFromWatchlist(
     receivedId,
     productId
   );
@@ -24,6 +23,6 @@ export const removeFromWatchlist = asyncWrapper(async (req, res) => {
 
 export const getUserWatchlist = asyncWrapper(async (req, res) => {
   const { id: receivedId } = req.params;
-  const watchlist = watchlistService.getUserWatchlist(receivedId);
+  const watchlist = WatchlistService.getUserWatchlist(receivedId);
   res.status(200).json({ watchlist });
 });

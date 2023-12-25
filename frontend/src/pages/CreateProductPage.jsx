@@ -52,6 +52,7 @@ export default function CreateProductPage() {
     if (data) {
       setSuccessMessage("Product created successfully");
       reset();
+      clearServerError();
     }
   };
 

@@ -1,10 +1,9 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import ProductService from "../services/ProductService.js";
-import { getIdFromToken } from "../utils/tokenDecoder.js";
 
 export const createProduct = asyncWrapper(async (req, res) => {
   
-  const userId = getIdFromToken(req, res);
+  const userId = req.user._id;
 
   let productData = { ...req.body, seller: userId, images: req.files };
 

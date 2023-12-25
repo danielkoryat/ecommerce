@@ -8,7 +8,7 @@ const cookieOptions = {
 
 export const setTokensCookies = (res, req, user) => {
   const accessToken = jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "10s",
   });
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
@@ -27,15 +27,21 @@ export const clearTokensCookies = (res) => {
   res.clearCookie("refreshToken");
 };
 
-export const genateAccessTokenFromRefreshToken = (refreshToken) => {
+export const genateAccessTokenFromRefreshToken = (req,res) => {
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return null;
   }
   try {
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const accessToken = jwt.sign({ user: decoded.user }, process.env.JWT_SECRET, {
-      expiresIn: "15m",
+    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, {
+      expiresIn: "10s",
     });
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes for access token
+    });
+    req.user = user;
     return accessToken;
   } catch (error) {
     return null;

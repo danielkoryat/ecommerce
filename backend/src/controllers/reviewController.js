@@ -2,7 +2,7 @@ import asyncWrapper from "../middlewares/asyncWrapper.js";
 import ReviewService from "../services/ReviewService.js";
 
 export const createReview = asyncWrapper(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
   const data = { ...req.body, userId };
   const review = await ReviewService.createReview(data);
   res.status(201).json(review);
