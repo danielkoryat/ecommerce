@@ -3,8 +3,8 @@ import CustomError from "../errors/customError.js";
 import { genateAccessTokenFromRefreshToken } from "../utils/authUtils.js";
 
 const cookieJwtAuth = (req, res, next) => {
-  const token = req.cookies.token;
   try {
+    const token = req.cookies.token;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
     next();

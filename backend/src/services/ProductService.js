@@ -2,7 +2,7 @@ import Joi from "joi";
 import Product from "../models/product.js";
 import CustomError from "../errors/customError.js";
 import { getProductSchema } from "../utils/validateHelpers.js";
-import { uploadImagesToAzure } from "./AzureStorageService.js";
+import { uploadImagesToAzure, deleteImagesFromAzure } from "./AzureStorageService.js";
 
 class ProductService {
   async createProduct(productData) {
@@ -33,31 +33,32 @@ class ProductService {
     }
   }
 
-  async getProducts(page) {
-    const limit = 10;
-
+  async getProducts(page, limit) {
     const products = await Product.find()
       .sort({ createdAt: -1 })
       .skip(page * limit)
       .limit(limit);
 
-    return products;
+    const hasMore = products.length > limit && products.length > 0; 
+
+    return {products, hasMore};
   }
 
   async getProductById(id) {
-    const product = await Product.findById(id).populate("seller", "username");
+    const product = await Product.findById(id).populate("seller","username");
     if (!product) {
       throw new CustomError(404, "Product not found");
     }
-
     return product;
   }
 
   async deleteProduct(id) {
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
     if (!product) {
       throw new CustomError(404, "Product not found");
     }
+    await deleteImagesFromAzure(product.imageUrls);
+    await Product.deleteOne({ _id: id });
   }
 }
 
