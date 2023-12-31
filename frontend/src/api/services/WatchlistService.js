@@ -3,11 +3,11 @@ import apiClient from "../axios.js";
 class WatchlistService {
 
     async getUserWatchlist(userid) {
-        const { data } = await apiClient.get(`/watchlist/`,userid);
+        const { data } = await apiClient.get(`/watchlist/${userid}`,);
         return data;
     }
 
-    async addProductToWatchlist(userId, productId) {
+    async addToWatchlist(userId, productId) {
         const { data } = await apiClient.post(`/watchlist/${userId}`, { productId });
         return data;
     }

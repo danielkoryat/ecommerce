@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import categoryService from "../api/services/CategoryService";
 
-//TODO fixed the categories.categories problem
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async () => {

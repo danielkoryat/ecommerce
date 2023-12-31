@@ -5,6 +5,7 @@ import { errorContext } from "../../errors/errorHandler";
 import watchlistService from "../../api/services/WatchlistService";
 import { setAlert } from "../../app/alertSlice";
 import { useDispatch } from "react-redux";
+import ErrorNotification from "../../components/ErrorNotification";
 
 const ProductDisplay = ({
   product,
@@ -17,8 +18,7 @@ const ProductDisplay = ({
   pathToDefaultImage,
   isAuthenticated,
 }) => {
-  const dispatch = useDispatch()
-  ;
+  const dispatch = useDispatch();
   const {
     fetchData: addToWatchlist,
     loading: addToWatchlistLoading,
@@ -37,14 +37,17 @@ const ProductDisplay = ({
   };
 
   const removeProductFromWatchlist = async () => {
-      
-  }
+    // TODO: Remove product from watchlist
+  };
 
-  if (!product) {
-    return <p className="text-center text-gray-500">Product not found</p>;
-  }
-
-  return (
+  return !product ? (
+    <ErrorNotification
+      title={"Product not found"}
+      message={
+        "This product could not be found, if you believe this is an error, please contact us"
+      }
+    />
+  ) : (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/2">
@@ -78,8 +81,7 @@ const ProductDisplay = ({
           <p className="mb-4">
             <span className="text-gray-800 font-semibold">Categories:</span>
             <span className="text-blue-500 ml-2">
-              {product.categories
-              .map((category) => category.name).join(", ")}
+              {product.categories.map((category) => category.name).join(", ")}
             </span>
           </p>
           <p className="text-gray-600 text-sm mb-4">

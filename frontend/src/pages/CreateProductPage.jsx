@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 export default function CreateProductPage() {
   const [secsessMessage, setSuccessMessage] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const { categories } = useSelector((state) => state.category.categories);
+  const categories = useSelector((state) => state.category.categories);
   const { loading, serverError, fetchData, clearServerError } = usefetch(
     productService.createProduct,
     errorContext.product

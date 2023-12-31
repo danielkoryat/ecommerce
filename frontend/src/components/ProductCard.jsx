@@ -1,11 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import defaultImage from '../../public/images/default-product-image.png'
 const ProductCard = ({ product }) => {
   const { _id, imageUrls, name, price, description } = product;
   const navigate = useNavigate();
-  //TODO find a way to acsess this image globally
-  const pathToDefoultImage = "../images/default-product-image.png";
 
   const handleClick = () => {
     navigate(`/products/${_id}`);
@@ -18,7 +16,7 @@ const ProductCard = ({ product }) => {
     >
       <img
         className="w-full h-64 object-cover object-center" // Adjusted classes here
-        src={imageUrls[0] ? imageUrls[0] : pathToDefoultImage}
+        src={imageUrls[0] ? imageUrls[0] : defaultImage}
         alt={name}
       />
 
