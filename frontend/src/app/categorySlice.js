@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import categoryService from "../api/services/CategoryService";
 
+//TODO fixed the categories.categories problem
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async () => {
@@ -18,7 +19,7 @@ export const categorySlice = createSlice({
   },
   reducers: {
     updateCategories: (state, action) => {
-      state.categories = action.payload;
+      state.categories = action.payload.categories;
     },
   },
   extraReducers: (builder) => {
@@ -28,7 +29,7 @@ export const categorySlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.categories = action.payload;
+        state.categories = action.payload.categories;
         state.loading = false;
       })
       .addCase(fetchCategories.rejected, (state, action) => {

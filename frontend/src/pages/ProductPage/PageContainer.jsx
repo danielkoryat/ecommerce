@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import ProductService from "../../api/services/ProductService";
 import { errorContext } from "../../errors/errorHandler";
-import NoProductsNotification from "../../components/NoProductNotification";
+import ErrorNotification from "../../components/ErrorNotification";
 import Spinner from "../../components/Spinner";
 import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
@@ -53,12 +53,8 @@ const ProductPage = () => {
     }
   };
 
-  const handleAddToWatchlist = () => {
-    // Implementation for adding product to watchlist
-  };
-
   if (loading) return <Spinner />;
-  if (!product) return <NoProductsNotification />;
+  if (!product) return <ErrorNotification />;
 
   return (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
@@ -69,7 +65,6 @@ const ProductPage = () => {
         handleDelete={handleDelete}
         deleteLoading={deleteLoading}
         deleteError={deleteError}
-        handleAddToWatchlist={handleAddToWatchlist}
         isAuthenticated={isAuthenticated}
         isSeller={id === product?.seller._id}
         pathToDefaultImage={PATH_TO_DEFAULT_IMAGE}

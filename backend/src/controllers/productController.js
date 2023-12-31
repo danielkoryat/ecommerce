@@ -27,6 +27,7 @@ export const deleteProduct = asyncWrapper(async (req, res) => {
 
 export const getProducts = asyncWrapper(async (req, res) => {
   const page = parseInt(req.query.page);
+  const categoryFilter = req.query.categories;
   const limit = 10;
 
   if (Number.isNaN(page)) {
@@ -34,8 +35,7 @@ export const getProducts = asyncWrapper(async (req, res) => {
       .status(400)
       .json({ success: false, message: "Page number is required and must be greater than 0" });
   }
-
-  const { products, hasMore } = await ProductService.getProducts(page, limit);
+  const { products, hasMore } = await ProductService.getProducts(page, limit, categoryFilter);
 
   return res.status(200).json({
     success: true,

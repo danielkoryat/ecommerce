@@ -10,6 +10,10 @@ import env from "dotenv";
 env.config();
 
 const unsplashAccessKey = process.env.UNSPLASH_ACCESS_KEY;
+const AZURE_STORAGE_CONNECTION_STRING =
+  process.env.AZURE_STORAGE_CONNECTION_STRING;
+const CONTAINER_NAME = process.env.CONTAINER_NAME;
+
 const downloadImageAsBuffer = async (imageUrl) => {
   const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
   const buffer = response.data;
@@ -17,9 +21,6 @@ const downloadImageAsBuffer = async (imageUrl) => {
   return { buffer, originalname };
 };
 
-const AZURE_STORAGE_CONNECTION_STRING =
-  process.env.AZURE_STORAGE_CONNECTION_STRING;
-const CONTAINER_NAME = process.env.CONTAINER_NAME;
 
 
 async function generateAndInsertProducts(numberOfProducts) {
@@ -52,6 +53,7 @@ async function generateAndInsertProducts(numberOfProducts) {
 
     // Save the product document to the database
     await product.save();
+    console.log(`Product ${i + 1} created:`, product.name);
   }
 }
 

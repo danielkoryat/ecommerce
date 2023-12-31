@@ -2,7 +2,11 @@ import Joi from "joi";
 import Product from "../models/product.js";
 import CustomError from "../errors/customError.js";
 import { getProductSchema } from "../utils/validateHelpers.js";
-import { uploadImagesToAzure, deleteImagesFromAzure } from "./AzureStorageService.js";
+import {
+  uploadImagesToAzure,
+  deleteImagesFromAzure,
+} from "./AzureStorageService.js";
+import mongoose from "mongoose";
 
 class ProductService {
   async createProduct(productData) {
@@ -33,19 +37,34 @@ class ProductService {
     }
   }
 
-  async getProducts(page, limit) {
-    const products = await Product.find()
+  async getProducts(page, limit, categoryFilter) {
+    const query = {};
+    if (categoryFilter) {
+      const categoryIds = categoryFilter.split(",");
+      if (categoryIds.length > 0) {
+        const objectIds = categoryIds.map(
+          (id) => new mongoose.Types.ObjectId(id)
+        );
+        query.categories = { $all: objectIds };
+      }
+    }
+
+    const products = await Product.find(query)
       .sort({ createdAt: -1 })
       .skip(page * limit)
-      .limit(limit);
+      .limit(limit + 1)
+      .populate("categories", "name");
 
-    const hasMore = products.length > limit && products.length > 0; 
+    const hasMore = products.length > limit;
+    const productsToReturn = hasMore ? products.slice(0, -1) : products;
 
-    return {products, hasMore};
+    return { products: productsToReturn, hasMore };
   }
 
   async getProductById(id) {
-    const product = await Product.findById(id).populate("seller","username");
+    const product = await Product.findById(id)
+      .populate("seller", "username")
+      .populate("categories", "name");
     if (!product) {
       throw new CustomError(404, "Product not found");
     }
