@@ -1,8 +1,9 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 const NavBarTab = ({ to, children }) => {
   const baseTabStyle = "py-4 px-2 font-semibold transition duration-300";
-  const baseButtonStyle = "py-2 px-2 font-medium rounded transition duration-300";
+  const baseButtonStyle =
+    "py-2 px-2 font-medium rounded transition duration-300";
   const tabStyles = {
     base: baseTabStyle,
     inactive: "text-gray-500 hover:text-green-500",
@@ -13,23 +14,30 @@ const NavBarTab = ({ to, children }) => {
 
   const getNavLinkClass = ({ isActive }) => {
     switch (children) {
-      case 'Login':
+      case "Login":
         return tabStyles.login;
-      case 'Register':
+      case "Register":
         return tabStyles.register;
-      case 'Logout':
+      case "Logout":
         return tabStyles.logout;
       default:
-        return isActive ? `${tabStyles.base} ${tabStyles.active}` : `${tabStyles.base} ${tabStyles.inactive}`;
+        return isActive
+          ? `${tabStyles.base} ${tabStyles.active}`
+          : `${tabStyles.base} ${tabStyles.inactive}`;
     }
   };
 
-
   return (
-    <NavLink to={to} className={getNavLinkClass}>
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `block lg:inline-block ${getNavLinkClass({ isActive })}`
+      }
+    >
       {children}
     </NavLink>
   );
 };
 
 export default NavBarTab;
+

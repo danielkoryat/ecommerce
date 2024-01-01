@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  //TODO fix the x button position
 
   const handleSearch = (event) => {
     //TODO Implement your search logic here

@@ -28,7 +28,7 @@ const ProductPage = () => {
 
   const {
     loading: deleteLoading,
-    error: deleteError,
+    serverError: deleteError,
     fetchData: deleteProduct,
   } = useFetch(ProductService.deleteProduct, errorContext.product);
 

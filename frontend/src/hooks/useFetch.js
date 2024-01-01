@@ -35,7 +35,7 @@ function useFetch(apiCallFunction, customErrorContext) {
     } finally {
       setLoading(false);
     }
-  }, [apiCallFunction, customErrorContext, dispatch, navigate]);
+  }, [apiCallFunction, customErrorContext]);
 
   return { loading, serverError, fetchData, clearServerError };
 }
