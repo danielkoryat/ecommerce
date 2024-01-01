@@ -6,6 +6,8 @@ import watchlistService from "../../api/services/WatchlistService";
 import { setAlert } from "../../app/alertSlice";
 import { useDispatch } from "react-redux";
 import ErrorNotification from "../../components/ErrorNotification";
+import defoultProductImage from "../../assets/images/default-product-image.png";
+
 
 const ProductDisplay = ({
   product,
@@ -53,9 +55,9 @@ const ProductDisplay = ({
         <div className="md:w-1/2">
           <img
             src={
-              product.imageUrls && product.imageUrls[0]
+              product.imageUrls[0]
                 ? product.imageUrls[0]
-                : pathToDefaultImage
+                : defoultProductImage
             }
             alt={product.name}
             className="rounded-lg mb-4 md:mb-0 max-w-xs"

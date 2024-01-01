@@ -11,7 +11,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { setAlert } from "../../app/alertSlice";
 import ProductDisplay from "./ProductDisplay";
 
-const PATH_TO_DEFAULT_IMAGE = "../../../public/images/default-product-image.png"; 
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -67,7 +66,6 @@ const ProductPage = () => {
         deleteError={deleteError}
         isAuthenticated={isAuthenticated}
         isSeller={id === product?.seller._id}
-        pathToDefaultImage={PATH_TO_DEFAULT_IMAGE}
       />
       <EditProductComponent isOpen={isEditing} product={product} />
       <CommentsSection productId={productId} isAuthenticated={isAuthenticated} />

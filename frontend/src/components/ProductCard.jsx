@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import defaultImage from '../../public/images/default-product-image.png'
+import defoultProductImage from '../assets/images/default-product-image.png'
 const ProductCard = ({ product }) => {
   const { _id, imageUrls, name, price, description } = product;
   const navigate = useNavigate();
@@ -15,8 +15,8 @@ const ProductCard = ({ product }) => {
       onClick={handleClick}
     >
       <img
-        className="w-full h-64 object-cover object-center" // Adjusted classes here
-        src={imageUrls[0] ? imageUrls[0] : defaultImage}
+        className="w-full h-64 object-cover object-center"
+        src={imageUrls[0] ? imageUrls[0] : defoultProductImage}
         alt={name}
       />
 
