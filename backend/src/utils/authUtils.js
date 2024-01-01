@@ -27,10 +27,10 @@ export const clearTokensCookies = (res) => {
   res.clearCookie("refreshToken");
 };
 
-export const genateAccessTokenFromRefreshToken = (req,res) => {
+export const genateAccessTokenFromRefreshToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
-    return null;
+    return next(new CustomError("No refresh token provided", 401));
   }
   try {
     const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -42,8 +42,8 @@ export const genateAccessTokenFromRefreshToken = (req,res) => {
       expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes for access token
     });
     req.user = user;
-    return accessToken;
+    next();
   } catch (error) {
-    return null;
+    next(new CustomError("Invalid refresh token", 401));
   }
 };

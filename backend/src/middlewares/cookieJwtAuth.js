@@ -9,16 +9,14 @@ const cookieJwtAuth = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      const accessToken = genateAccessTokenFromRefreshToken(req, res);
-      if (accessToken) {
-        return next();
-      }
+    if (error instanceof jwt.TokenExpiredError) {
+      genateAccessTokenFromRefreshToken(req, res, next);
     } else {
       res.clearCookie("token");
-      throw new CustomError(error.message, 401);
+      next(new CustomError(error.message, 401));
     }
   }
 };
+
 
 export default cookieJwtAuth;
