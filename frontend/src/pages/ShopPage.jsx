@@ -4,13 +4,15 @@ import { useSelector } from "react-redux";
 import useFetch from "../hooks/useFetch";
 import ProductService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
-import Spinner from "../components/Spinner";
 import ProductCard from "../components/ProductCard";
 import ErrorNotification from "../components/ErrorNotification";
+import Spinner from "../components/spinner";
 
 const ShopPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  //TODO improve styling
   const categories = useSelector((state) => state.category.categories);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -51,23 +53,27 @@ const ShopPage = () => {
 
   return (
     <>
-         <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Shop</h1>
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => handleCategorySelect(category._id)}
-            className={`px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full transition-colors
+      <section>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
+          Shop
+        </h1>
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategorySelect(category._id)}
+              className={`px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full transition-colors
                         ${
                           selectedCategories.includes(category._id)
                             ? "bg-blue-500 text-white"
                             : "bg-gray-200 text-gray-800 hover:bg-blue-500 hover:text-white"
                         }`}
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+      </section>
       {products.length === 0 && selectedCategories.length > 0 ? (
         <ErrorNotification
           title="No products found"
@@ -75,31 +81,43 @@ const ShopPage = () => {
         />
       ) : (
         <>
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-          >
-            {products.map((product, i) => (
-              <ProductCard product={product} key={i} />
-            ))}
-          </div>
-          <div className="flex justify-center mt-8 space-x-4">
-            <button
-              onClick={() => setSearchParams({ page: pageNumber - 1 })}
-              disabled={pageNumber === 0}
-              className={`px-4 py-2 text-white font-semibold rounded-md 
-                ${pageNumber === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700"}`}
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => setSearchParams({ page: pageNumber + 1 })}
-              disabled={!hasMore}
-              className={`px-4 py-2 text-white font-semibold rounded-md 
-                ${!hasMore ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700"}`}
-            >
-              Next
-            </button>
-          </div>
+          <section>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {products.map((product, i) => (
+                <ProductCard
+                  product={product}
+                  isAuth={isAuthenticated}
+                  key={i}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center mt-8 space-x-4">
+              <button
+                onClick={() => setSearchParams({ page: pageNumber - 1 })}
+                disabled={pageNumber === 0}
+                className={`px-4 py-2 text-white font-semibold rounded-md 
+                ${
+                  pageNumber === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-700"
+                }`}
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setSearchParams({ page: pageNumber + 1 })}
+                disabled={!hasMore}
+                className={`px-4 py-2 text-white font-semibold rounded-md 
+              ${
+                !hasMore
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-700"
+              }`}
+              >
+                Next
+              </button>
+            </div>
+          </section>
         </>
       )}
     </>

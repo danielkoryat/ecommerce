@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Transition } from '@headlessui/react';
 
 const Alert = () => {
+  //TODO improve styling
   const { message, type, isOpen } = useSelector((state) => state.alert);
   const dispatch = useDispatch();
 

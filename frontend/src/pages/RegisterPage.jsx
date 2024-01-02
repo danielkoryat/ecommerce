@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Spinner from "../components/spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { createUserAsync } from "../app/thunks/userThunks.js";
 import { resetServerError } from "../app/userSlice.js";
-
+import { Button } from "@material-tailwind/react";
 
 const RegisterPage = () => {
   const loading = useSelector((state) => state.user.loading);
@@ -18,7 +17,6 @@ const RegisterPage = () => {
 
   const {
     register,
-    setError,
     clearErrors,
     handleSubmit,
     formState: { errors },
@@ -92,20 +90,19 @@ const RegisterPage = () => {
               <p className="text-red-600">{errors.password.message}</p>
             )}
           </div>
-
-          <div className="flex items-baseline justify-between">
-            <button
+          <Button
+              loading={loading}
               type="submit"
-              className="px-6 py-2 mt-4 text-white bg-green-600 rounded-lg hover:bg-blue-900"
+              size="md"
+              color="green"
+              className="mt-4"
             >
               Register
-            </button>
-          </div>
+            </Button>     
           {serverError && (
             <p className="text-red-600">{serverError}</p>
           )}
         </form>
-        {loading && <Spinner />}
       </div>
     </div>
   );

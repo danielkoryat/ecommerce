@@ -1,26 +1,40 @@
 import React, { useState } from "react";
+import { Button, Input } from "@material-tailwind/react";
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  //TODO fix the x button position
 
   const handleSearch = (event) => {
-    //TODO Implement your search logic here
-    console.log("Searching for:", searchTerm);
+    console.log("Searching for:", event.target.value);
     event.preventDefault();
   };
+
 
   return (
     <>
       <form onSubmit={handleSearch}>
-        <input
-          className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
-          type="search"
-          name="search"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
+        <div className="flex w-full md:max-w-md lg:max-w-lg">
+          <Input
+            type="text"
+            placeholder="Search..."
+            className="flex-auto"
+            color="green"
+            size="sm"
+            outline
+            
+            autoComplete="off"
+            label="Search"
+            
+          />
+          <Button
+            type="submit"
+            size="sm"
+            className="ml-2"
+            color="green"
+            loading={false}
+          >
+            Search
+          </Button>
+        </div>
       </form>
     </>
   );

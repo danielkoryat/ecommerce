@@ -4,6 +4,8 @@ import Spinner from "../components/spinner";
 import { loginUserAsync } from "../app/thunks/userThunks.js";
 import { useSelector, useDispatch } from "react-redux";
 import { resetServerError } from "../app/userSlice.js";
+import { Button } from "@material-tailwind/react";
+
 
 
 
@@ -68,18 +70,17 @@ const LoginPage = () => {
               <p className="text-red-600">{errors.password.message}</p>
             )}
           </div>
-
-          <div className="flex items-baseline justify-between">
-            <button
+            <Button
+              loading={loading}
               type="submit"
-              className="px-6 py-2 mt-4 text-white bg-green-600 rounded-lg hover:bg-green-900"
+              size="md"
+              color="green"
+              className="mt-4"
             >
               Login
-            </button>
-          </div>
+            </Button>
           {serverError && <p className="text-red-600">{serverError}</p>}
         </form>
-        {loading && <Spinner />}
       </div>
     </div>
   );
