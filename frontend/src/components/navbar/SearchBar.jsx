@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Button, Input } from "@material-tailwind/react";
+import { useDispatch } from "react-redux";
+import { setAlert } from "../../app/alertSlice";
 
 const SearchBar = () => {
+  const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = (event) => {
-    console.log("Searching for:", event.target.value);
     event.preventDefault();
   };
-
 
   return (
     <>
@@ -18,12 +20,10 @@ const SearchBar = () => {
             placeholder="Search..."
             className="flex-auto"
             color="green"
-            size="sm"
-            outline
-            
+            outline="true"
             autoComplete="off"
             label="Search"
-            
+            onChange={(e) => setSearchValue(e.target.value)}
           />
           <Button
             type="submit"

@@ -1,60 +1,58 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearAlert } from '../app/alertSlice';
-import PropTypes from 'prop-types';
-import { Transition } from '@headlessui/react';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { clearAlert } from "../app/alertSlice";
+import PropTypes from "prop-types";
+import { Alert as AlertComponent } from "@material-tailwind/react";
 
 const Alert = () => {
-  //TODO improve styling
   const { message, type, isOpen } = useSelector((state) => state.alert);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let timer;
     if (isOpen) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         dispatch(clearAlert());
       }, 3000);
-      return () => clearTimeout(timer);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [isOpen, dispatch]);
 
   if (!isOpen) {
     return null;
   }
 
-  const colorClasses = type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+  const getColor = (alertType) => {
+    switch (alertType) {
+      case "success":
+        return "green";
+      case "error":
+        return "red";
+      case "info":
+        return "blue";
+      default:
+        return "blue";
+    }
+  };
+
+  const color = getColor(type);
 
   return (
-    <Transition
-      show={isOpen}
-      enter="transition ease-out duration-300"
-      enterFrom="transform -translate-y-full opacity-0"
-      enterTo="transform translate-y-0 opacity-100"
-      leave="transition ease-in duration-300"
-      leaveFrom="transform translate-y-0 opacity-100"
-      leaveTo="transform -translate-y-full opacity-0"
+    <AlertComponent
+      open={isOpen}
+      color={color}
+      onClose={() => dispatch(clearAlert())}
     >
-      <div
-        className={`fixed top-0 inset-x-0 p-4 ${colorClasses} shadow-md`}
-        role="alert"
-      >
-        <div className="flex justify-between items-center">
-          <span>{message}</span>
-          <button
-            onClick={() => dispatch(clearAlert())}
-            className="text-lg font-semibold"
-          >
-            &times;
-          </button>
-        </div>
-      </div>
-    </Transition>
+      {message}
+    </AlertComponent>
   );
 };
 
-alert.propTypes = {
-  message: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['success', 'error']).isRequired
+Alert.propTypes = {
+  message: PropTypes.string,
+  type: PropTypes.oneOf(["success", "error", "info"]),
 };
 
 export default Alert;
