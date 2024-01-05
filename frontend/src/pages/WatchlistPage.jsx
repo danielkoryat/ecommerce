@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import Spinner from "../components/spinner.jsx";
 
 const WatchlistPage = () => {
-  // State to hold the list of products in the watchlist
   const [watchlist, setWatchlist] = useState([]);
   const { loading, serverError, fetchData } = useFetch(
     WatchlistService.getUserWatchlist,
@@ -15,7 +14,6 @@ const WatchlistPage = () => {
   );
   const { id: userId } = useSelector((state) => state.user);
 
-  // Fetch the watchlist from the backend on component mount
   useEffect(() => {
     const fetchWatchlist = async () => {
       const data = await fetchData(userId);
@@ -23,7 +21,8 @@ const WatchlistPage = () => {
         setWatchlist(data);
       }
     };
-  }, []);
+    fetchWatchlist;
+  }, [userId]);
 
   if (serverError) {
     return <p className="text-red-500">{serverError}</p>;

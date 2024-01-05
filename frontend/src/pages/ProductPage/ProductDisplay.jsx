@@ -7,6 +7,7 @@ import { setAlert } from "../../app/alertSlice";
 import { useDispatch } from "react-redux";
 import ErrorNotification from "../../components/ErrorNotification";
 import defoultProductImage from "../../assets/images/default-product-image.png";
+import { Button } from "@material-tailwind/react";
 
 
 const ProductDisplay = ({
@@ -101,12 +102,13 @@ const ProductDisplay = ({
             >
               {isEditing ? "Hide" : "Edit"}
             </button>
-            <button
+            <Button
               onClick={handleDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+              color="yellow"
+              loading={addToWatchlistLoading}
             >
               Delete
-            </button>
+            </Button>
           </div>
         )}
         {isAuthenticated && (
@@ -121,8 +123,6 @@ const ProductDisplay = ({
           <p className="text-red-500 mt-2 md:mt-0">{deleteError}</p>
         )}
       </div>
-
-      {deleteLoading && <Spinner />}
     </div>
   );
 };
