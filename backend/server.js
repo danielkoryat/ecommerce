@@ -11,7 +11,9 @@ import userRouter from "./src/routes/user.js";
 import productRouter from "./src/routes/product.js";
 import categoryRouter from "./src/routes/category.js";
 import reviewRouter from "./src/routes/review.js";
+import watchlistRouter from "./src/routes/watchlist.js";
 import cookieParser from "cookie-parser";
+import cookieJwtAuth from "./src/middlewares/cookieJwtAuth.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +28,7 @@ app.use(`${BASE_URL}/user`, userRouter);
 app.use(`${BASE_URL}/product`, productRouter);
 app.use(`${BASE_URL}/category`, categoryRouter);
 app.use(`${BASE_URL}/review`, reviewRouter);
+app.use(`${BASE_URL}/watchlist`, watchlistRouter,cookieJwtAuth);
 
 app.use(notFound);
 app.use(errorHandler);

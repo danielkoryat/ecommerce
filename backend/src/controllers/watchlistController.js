@@ -1,11 +1,11 @@
-import asyncWrapper from "../middlewares/asyncWrapper";
-import WatchlistService from "../services/WatchlistService";
+import asyncWrapper from "../middlewares/asyncWrapper.js";
+import WatchlistService from "../services/WatchlistService.js";
 
 export const addToWatchlist = asyncWrapper(async (req, res) => {
-  const { id: receivedId } = req.params;
+  const { userId } = req.params;
   const { productId } = req.body;
   const watchlist = WatchlistService.addProductToWatchlist(
-    receivedId,
+    userId,
     productId
   );
   res.status(200).json({ success: true, watchlist });

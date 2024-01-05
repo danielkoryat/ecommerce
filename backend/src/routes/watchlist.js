@@ -2,15 +2,15 @@ import express from "express";
 import {
   getUserWatchlist,
   addToWatchlist,
-  removeFromWatchlist
+  removeFromWatchlist,
 } from "../controllers/watchlistController.js";
-import cookieJwtAuth from "../middlewares/cookieJwtAuth.js";
 
 const router = express.Router();
 
-router.route("/:userId")
-  .get(cookieJwtAuth, getUserWatchlist)
-  .post(cookieJwtAuth, addToWatchlist)
-  .patch(cookieJwtAuth, removeFromWatchlist);
+router
+  .route("/:userId")
+  .get(getUserWatchlist)
+  .post(addToWatchlist)
+  .patch(removeFromWatchlist);
 
 export default router;
