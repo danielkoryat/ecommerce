@@ -37,10 +37,12 @@ export const genateAccessTokenFromRefreshToken = (req, res, next) => {
     const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, {
       expiresIn: "10s",
     });
-    res.cookie("token", accessToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes for access token
-    });
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+    }); // 15 minutes for access token
+
     req.user = user;
     next();
   } catch (error) {

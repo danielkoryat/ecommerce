@@ -13,7 +13,7 @@ export const login = asyncWrapper(async (req, res) => {
 });
 
 export const checkUserAuth = asyncWrapper(async (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies.accessToken;
   if (!token) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }

@@ -5,7 +5,7 @@ import { genateAccessTokenFromRefreshToken } from "../utils/authUtils.js";
 const cookieJwtAuth = (req, res, next) => {
   try {
     //TODO test the refresh token auth
-    const token = req.cookies.token;
+    const token = req.cookies.accessToken;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
     next();
