@@ -8,12 +8,12 @@ class WatchlistService {
  * If the user has no watchlist, a new one is created.
  * @param {string} userId - The ID of the user.
  * @param {string} productId - The ID of the product.
- * @throws {CustomError} If userId or productId is missing.
+ * @throws {CustomeError} If userId or productId is missing.
  * @return {Promise<void>} A promise that resolves when the product is added to the watchlist.
  */
   async addProductToWatchlist(userId, productId) {
     if (!userId || !productId) {
-        throw new CustomError("userId and productId are required", 400);
+        throw new CustomeError("userId and productId are required", 400);
     }
     let watchlist = await Watchlist.findOne({ userId });
     if (watchlist) {
