@@ -12,7 +12,7 @@ class WatchlistService {
         return data;
     }
 
-    async removeProductFromWatchlist(userId, productId) {
+    async removeFromWatchlist(userId, productId) {
         const { data } = await apiClient.patch(`/watchlist/${userId}`, { productId });
         return data;
     }

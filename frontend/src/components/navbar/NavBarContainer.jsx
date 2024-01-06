@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import { logoutUserAsync } from "../../app/thunks/userThunks.js";
 
 const NavBarContainer = () => {
+  //TODO - add logo
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, username } = useSelector((state) => state.user);
   const dispatch = useDispatch();

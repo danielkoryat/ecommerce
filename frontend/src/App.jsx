@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchCategories } from "./app/categorySlice";
+import { fetchWatchlistAsync } from "./app/thunks/watchlistThunks.js";
 import Navbar from "./components/navbar/NavBarContainer.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/HomePage.jsx";
@@ -20,8 +21,10 @@ import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
+  
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchWatchlistAsync());
   }, []);
 
   const publicRoutes = [

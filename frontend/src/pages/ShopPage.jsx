@@ -9,7 +9,6 @@ import ErrorNotification from "../components/ErrorNotification";
 import Spinner from "../components/spinner";
 
 const ShopPage = () => {
-  //TODO improve styling
   const categories = useSelector((state) => state.category.categories);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -44,7 +43,12 @@ const ShopPage = () => {
   }, [pageNumber, fetchData, selectedCategories]);
 
   if (serverError) {
-    return <div className="text-red-500">{serverError}</div>;
+    return (
+      <ErrorNotification
+        title="server error accessing products"
+        message={serverError}
+      />
+    );
   }
 
   if (loading) {
@@ -58,9 +62,9 @@ const ShopPage = () => {
           Shop
         </h1>
         <div className="flex flex-wrap justify-center gap-2 mb-4">
-          {categories.map((category) => (
+          {categories.map((category, i) => (
             <button
-              key={category.id}
+              key={i}
               onClick={() => handleCategorySelect(category._id)}
               className={`px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full transition-colors
                         ${
@@ -86,7 +90,7 @@ const ShopPage = () => {
               {products.map((product, i) => (
                 <ProductCard
                   product={product}
-                  isAuth={isAuthenticated}
+                  isAuthenticated={isAuthenticated}
                   key={i}
                 />
               ))}

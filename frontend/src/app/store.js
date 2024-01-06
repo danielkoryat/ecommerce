@@ -6,11 +6,13 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
 import categoryReducer from './categorySlice';
 import alertReducer from './alertSlice';
+import watchlistReducer from './watchlistSlice';
 
 const reducers = combineReducers({
   user: userReducer,
   category: categoryReducer,
   alert: alertReducer,
+  watchlist: watchlistReducer,
 });
 
 const persistConfig = {

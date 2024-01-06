@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import useWatchlist from "../hooks/useWatchlist";
 import {
   Card,
   CardHeader,
@@ -8,53 +9,77 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import defoultProductImage from '../assets/images/default-product-image.png'
-const ProductCard = ({ product,isAuth }) => {
-  const { _id, imageUrls, name, price, description } = product;
-  const navigate = useNavigate();
+import defaultProductImage from "../assets/images/default-product-image.png";
 
-  const handleClick = () => {
-    navigate(`/products/${_id}`);
-  };
+const ProductCard = React.memo(
+  ({
+    product: { _id, imageUrls, name, price, description },
+    isAuthenticated,
+  }) => {
+    
+    const navigate = useNavigate();
+    const { addToWatchlist, isProductInWatchlist, removeFromWatchlist,loading,error } = useWatchlist();
 
-  return (
-        <Card className="w-96">
-          <CardHeader shadow={false} floated={false} className="h-96">
-            <img
-              src={imageUrls[0] ? imageUrls[0] : defoultProductImage}
-              alt="card-image"
-              className="h-full w-full object-cover cursor-pointer"
-              onClick={handleClick}
-            />
-          </CardHeader>
-          <CardBody>
-            <div className="mb-2 flex items-center justify-between">
-              <Typography color="blue-gray" className="font-medium">
-                {name}
-              </Typography>
-              <Typography color="blue-gray" className="font-medium">
-                {price}$
-              </Typography>
-            </div>
-            <Typography
-              variant="small"
-              color="gray"
-              className="font-normal opacity-75"
-            >
-              {description}
+    const imageUrl = imageUrls[0] || defaultProductImage;
+    const altText = `Product image for ${name}`;
+
+    const handleNavigate = () => navigate(`/products/${_id}`);
+
+    return (
+      <Card className="w-96 flex flex-col">
+        <CardHeader shadow={false} floated={false} className="h-96">
+          <img
+            src={imageUrl}
+            alt={altText}
+            className="h-full w-full object-cover cursor-pointer"
+            onClick={handleNavigate}
+          />
+        </CardHeader>
+        <CardBody className="flex-grow">
+          <div className="mb-2 flex items-center justify-between">
+            <Typography color="blue-gray" className="font-medium">
+              {name}
             </Typography>
-          </CardBody>
-        {isAuth && <CardFooter className="pt-0">
-          <Button
-            ripple={false}
-            fullWidth={true}
-            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+            <Typography color="blue-gray" className="font-medium">
+              ${price}
+            </Typography>
+          </div>
+          <Typography
+            variant="small"
+            color="gray"
+            className="font-normal opacity-75"
           >
-            Add to Watchlist
-          </Button>
-        </CardFooter>}
-        </Card>
-      );
-    };
+            {description}
+          </Typography>
+        </CardBody>
+        {isAuthenticated && (
+          <CardFooter className="pt-0">
+            {isProductInWatchlist(_id) ? (
+              <Button
+                loading={loading}
+                ripple={false}
+                fullWidth={true}
+                className="bg-red-500/10 text-red-500 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                onClick={() => removeFromWatchlist(_id)}
+              >
+                Remove from Watchlist
+              </Button>
+            ) : (
+              <Button
+                loading={loading}
+                ripple={false}
+                fullWidth={true}
+                className="bg-blue-500/10 text-blue-500 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                onClick={() => addToWatchlist(_id)}
+              >
+                Add to Watchlist
+              </Button>
+            )}
+          </CardFooter>
+        )}
+      </Card>
+    );
+  }
+);
 
 export default ProductCard;
