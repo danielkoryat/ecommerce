@@ -28,12 +28,14 @@ const watchlistSlice = createSlice({
     builder
       .addCase(fetchWatchlistAsync.pending, startLoading)
       .addCase(fetchWatchlistAsync.fulfilled, (state, action) => {
-        state.items.push(action.payload);
+        if (Array.isArray(action.payload)) {
+          state.items = action.payload;
+        }
       })
       .addCase(fetchWatchlistAsync.rejected, loadingFailed)
       .addCase(addToWatchlistAsync.pending, startLoading)
       .addCase(addToWatchlistAsync.fulfilled, (state, action) => {
-        state.items.push(action.payload);
+        typeof action.payload === "string" && state.items.push(action.payload);
       })
       .addCase(addToWatchlistAsync.rejected, loadingFailed)
       .addCase(removeFromWatchlistAsync.pending, startLoading)

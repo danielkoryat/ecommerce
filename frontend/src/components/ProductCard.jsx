@@ -18,7 +18,7 @@ const ProductCard = React.memo(
   }) => {
     
     const navigate = useNavigate();
-    const { addToWatchlist, isProductInWatchlist, removeFromWatchlist,loading,error } = useWatchlist();
+    const { addToWatchlist, isInWatchlist, removeFromWatchlist,loading } = useWatchlist(_id);
 
     const imageUrl = imageUrls[0] || defaultProductImage;
     const altText = `Product image for ${name}`;
@@ -54,7 +54,7 @@ const ProductCard = React.memo(
         </CardBody>
         {isAuthenticated && (
           <CardFooter className="pt-0">
-            {isProductInWatchlist(_id) ? (
+            {isInWatchlist ? (
               <Button
                 loading={loading}
                 ripple={false}
