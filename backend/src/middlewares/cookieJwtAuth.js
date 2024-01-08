@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import CustomError from "../errors/customError.js";
-import { genateAccessTokenFromRefreshToken } from "../utils/authUtils.js";
+import { generateAccessTokenFromRefreshToken } from "../utils/authUtils.js";
 
 const cookieJwtAuth = (req, res, next) => {
   try {
@@ -11,7 +11,7 @@ const cookieJwtAuth = (req, res, next) => {
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      genateAccessTokenFromRefreshToken(req, res, next);
+      generateAccessTokenFromRefreshToken(req, res, next);
     } else {
       res.clearCookie("token");
       next(new CustomError(error.message, 401));

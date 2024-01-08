@@ -8,7 +8,7 @@ const cookieOptions = {
 
 export const setTokensCookies = (res, req, user) => {
   const accessToken = jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "15m",
   });
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
@@ -27,21 +27,21 @@ export const clearTokensCookies = (res) => {
   res.clearCookie("refreshToken");
 };
 
-export const genateAccessTokenFromRefreshToken = (req, res, next) => {
+export const generateAccessTokenFromRefreshToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return next(new CustomError("No refresh token provided", 401));
   }
   try {
     const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "10s",
+    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, { 
+      expiresIn: "15m", 
     });
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
-      expires: new Date(Date.now() + 15 * 60 * 1000),
-    }); // 15 minutes for access token
+      expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes for access token
+    });
 
     req.user = user;
     next();
