@@ -1,6 +1,6 @@
 import Watchlist from "../models/Watchlist.js";
 import CustomError from "../errors/customError.js";
-
+import mongoose from "mongoose";
 class WatchlistService {
 /**
  * Adds a product to the user's watchlist.
@@ -15,19 +15,23 @@ async addProductToWatchlist(userId, productId) {
   if (!userId || !productId) {
     throw new CustomError("userId and productId are required", 400);
   }
+
   try {
-    let watchlist = await Watchlist.findOne({ userId });
-    if (watchlist) {
-      if (!watchlist.products.includes(productId)) {
-        watchlist.products.push(productId);
-      }
-    } else {
-      watchlist = new Watchlist({
-        userId,
-        products: [productId],
-      });
+    const Product = mongoose.model('Product');
+    // Verify that the product exists
+    const productExists = await Product.findById(productId);
+    if (!productExists) {
+      throw new CustomError("Product not found", 404);
     }
-    await watchlist.save();
+
+    // Use $addToSet to only add unique product IDs to the watchlist
+    const watchlist = await Watchlist.findOneAndUpdate(
+      { userId },
+      { $addToSet: { products: productId } },
+      { new: true, upsert: true }  // Creates a new watchlist if one doesn't exist
+    );
+    
+    return productExists;
   } catch (error) {
     throw new CustomError("Error adding product to watchlist", 500);
   }
@@ -62,10 +66,7 @@ async  removeProductFromWatchlist(userId, productId) {
    * @return {Promise<Object>} - The watchlist object for the user.
    */
   async getUserWatchlist(userId) {
-    const watchlist = await Watchlist.findOne({ userId });
-    if (!watchlist) {
-      throw new CustomError("Watchlist not found", 404);
-    }    
+    const watchlist = await Watchlist.findOne({ userId });   
     return watchlist;
   }
 }
