@@ -35,13 +35,13 @@ const watchlistSlice = createSlice({
       .addCase(fetchWatchlistAsync.rejected, loadingFailed)
       .addCase(addToWatchlistAsync.pending, startLoading)
       .addCase(addToWatchlistAsync.fulfilled, (state, action) => {
-        typeof action.payload === "string" && state.items.push(action.payload);
+        state.items.push(action.payload);
       })
       .addCase(addToWatchlistAsync.rejected, loadingFailed)
       .addCase(removeFromWatchlistAsync.pending, startLoading)
       .addCase(removeFromWatchlistAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(
-          (item) => item.id !== action.payload.id
+          (item) => item._id !== action.payload.productId
         );
       })
       .addCase(removeFromWatchlistAsync.rejected, loadingFailed);

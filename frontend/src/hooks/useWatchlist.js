@@ -17,7 +17,7 @@ const useWatchlist = (productId) => {
 
   // Check if the product is in the watchlist and update the state
   useEffect(() => {
-    setIsInWatchlist(watchlist.some((itemid) => itemid === productId));
+    setIsInWatchlist(watchlist.some((item) => item._id === productId));
   }, [watchlist, productId]); // Depend on watchlist and productId
 
   const addToWatchlist = async (productId) => {
@@ -29,8 +29,13 @@ const useWatchlist = (productId) => {
     }
   };
 
-  const removeFromWatchlist = (productId) => {
-    dispatch(removeFromWatchlistAsync(userid, productId));
+  const removeFromWatchlist = async (productId) => {
+    setLoading(true);
+    try {
+      await dispatch(removeFromWatchlistAsync({userid, productId})).unwrap();
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Function to fetch the watchlist

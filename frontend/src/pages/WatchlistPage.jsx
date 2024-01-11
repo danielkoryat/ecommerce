@@ -8,25 +8,22 @@ import Spinner from "../components/spinner.jsx";
 
 const WatchlistPage = () => {
   const [watchlist, setWatchlist] = useState([]);
-  const { loading, serverError, fetchData } = useFetch(
-    WatchlistService.getUserWatchlist,
-    errorContext.watchlist
-  );
-  const { id: userId } = useSelector((state) => state.user);
+  const [watchlistitemsIds, setWatchlistitemsIds] = useState(useSelector((state) => state.watchlist.items));
+  const {loading,serverError,fetchData} = useFetch(WatchlistService.getUserWatchlist, errorContext);
 
-  useEffect(() => {
-    const fetchWatchlist = async () => {
-      const data = await fetchData(userId);
-      if (data) {
-        setWatchlist(data);
-      }
-    };
-    fetchWatchlist;
-  }, [userId]);
-
-  if (serverError) {
-    return <p className="text-red-500">{serverError}</p>;
+  if (watchlistitemsIds) {
+    useEffect(() => {
+      const fetchWatchlist = async () => {
+        const userid = useSelector((state) => state.user.id);
+        const items = await fetchData(fetchData);
+        setWatchlist(items);
+      };
+      fetchWatchlist();
+    }, [watchlistitemsIds]);
   }
+
+  
+ 
 
   return loading ? (
     <Spinner />

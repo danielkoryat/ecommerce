@@ -29,9 +29,10 @@ export const addToWatchlistAsync = createAsyncThunk(
 
 export const removeFromWatchlistAsync = createAsyncThunk(
     'watchlist/removeFromWatchlistAsync',
-    async (productId, thunkAPI) => {      
+    async (payload, thunkAPI) => {      
         try {
-            const data = await watchlistService.removeFromWatchlist(productId);
+            const { userid, productId } = payload;
+            const data = await watchlistService.removeFromWatchlist(userid,productId);
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue(getErrorMessage(error.response, errorContext.watchlist));
