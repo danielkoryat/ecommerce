@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "../errors/errorHandler";
 import { logoutUserAsync } from "../app/thunks/userThunks";
+import useAlert from "./useAlert";
 
 function useFetch(apiCallFunction, customErrorContext) {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(null);
   const navigate = useNavigate();
+  const  setAlert  = useAlert();
   const dispatch = useDispatch();
 
   // Clears the current server error state.
@@ -25,6 +27,8 @@ function useFetch(apiCallFunction, customErrorContext) {
         if (err.response.status === 401) {
           dispatch(logoutUserAsync());
           navigate("/login");
+          setAlert("error", "Session expired. Please log in again.");
+          return null;
         }
         // Use a utility function to determine the error message to set.
         setServerError(getErrorMessage(err.response, customErrorContext));

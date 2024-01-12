@@ -1,10 +1,9 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import useWatchlist from "../hooks/useWatchlist";
 import { useSelector } from "react-redux";
 import useFetch from "../hooks/useFetch";
 import ProductService from "../api/services/ProductService";
-import setAlert from "../app/alertSlice";
 import { errorContext } from "../errors/errorHandler";
 import {
   Card,
@@ -21,6 +20,7 @@ const ProductCard = React.memo(
   ({
     product: { _id, imageUrls, name, price, description, seller },
     isAuthenticated,
+    onDelete,
   }) => {
     const navigate = useNavigate();
     const {
@@ -36,7 +36,13 @@ const ProductCard = React.memo(
       fetchData: deleteProduct,
     } = useFetch(ProductService.deleteProduct, errorContext.product);
 
-    const setSlert = useAlert();
+    const setAlert = useAlert();
+
+    useEffect(() => {
+      if (serverError) {
+        setAlert("error", serverError);
+      }
+    }, [serverError]);
 
     const imageUrl = imageUrls[0] || defaultProductImage;
     const altText = `Product image for ${name}`;
@@ -45,14 +51,14 @@ const ProductCard = React.memo(
 
     const handleNavigate = () => navigate(`/products/${_id}`);
 
-    const handleRemoveProduct = async () => {
-      try {
-        await deleteProduct(_id);
-        setSlert("success", "Product deleted successfully");
-      } catch (error) {
-        setSlert("error", serverError);
+    const handleDelete = async () => {
+      const data = await deleteProduct(_id);
+      console.log(data);
+      if (data.receivedId === _id) {
+        onDelete(_id);
+        setAlert("success", "Product deleted successfully");
       }
-    }
+    };
 
     return (
       <Card className="w-96 flex flex-col">
@@ -85,11 +91,11 @@ const ProductCard = React.memo(
           <CardFooter className="pt-0">
             {isSeller ? (
               <Button
-                loading={false}
+                loading={deleteLoading}
                 ripple={false}
                 fullWidth={true}
                 className="bg-red-500/10 text-red-500 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-                onClick={() => setSlert("success", "Product deleted successfully")}
+                onClick={handleDelete}
               >
                 Delete Product
               </Button>

@@ -15,20 +15,11 @@ const ShopPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const pageNumber = parseInt(searchParams.get("page")) || 0;
   const { loading, serverError, fetchData } = useFetch(
     ProductService.getProducts,
     errorContext.product
   );
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategories((prevSelectedCategories) =>
-      prevSelectedCategories.includes(category)
-        ? prevSelectedCategories.filter((c) => c !== category)
-        : [...prevSelectedCategories, category]
-    );
-  };
-
-  const pageNumber = parseInt(searchParams.get("page")) || 0;
 
   useEffect(() => {
     const getProductsDetails = async () => {
@@ -41,6 +32,20 @@ const ShopPage = () => {
     };
     getProductsDetails();
   }, [pageNumber, fetchData, selectedCategories]);
+
+  const handleProductDelete = (productId) => {
+    setProducts((currentProducts) =>
+      currentProducts.filter((product) => product._id !== productId)
+    );
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategories((prevSelectedCategories) =>
+      prevSelectedCategories.includes(category)
+        ? prevSelectedCategories.filter((c) => c !== category)
+        : [...prevSelectedCategories, category]
+    );
+  };
 
   if (serverError) {
     return (
@@ -89,6 +94,7 @@ const ShopPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {products.map((product, i) => (
                 <ProductCard
+                  onDelete={handleProductDelete}
                   product={product}
                   isAuthenticated={isAuthenticated}
                   key={i}
