@@ -21,7 +21,7 @@ import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchWatchlistAsync());
@@ -41,7 +41,9 @@ function App() {
   return (
     <Router>
       <header>
-        <Alert />
+        <div className="fixed top-0 inset-x-0 z-50">
+          <Alert />
+        </div>
         <Navbar />
       </header>
       <main>

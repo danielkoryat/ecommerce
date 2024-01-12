@@ -1,65 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {setAlert} from '../app/alertSlice'
+import { errorContext } from "../errors/errorHandler";
+import UserService from "../api/services/UserService";
+import useFetch from "../hooks/useFetch";
 const DashboardPage = () => {
-  // State to hold the list of products and user info
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [userInfo, setUserInfo] = useState({
     email: "user@example.com",
     username: "username",
-    // Additional user info can be added here
   });
 
-  // Fetch products posted by the user when the component mounts
-  useEffect(() => {
-    // Replace this with your actual API call to fetch products
-    // and user information
-    const fetchProducts = async () => {
-      try {
-        // const response = await api.get('/user/products');
-        // setProducts(response.data);
+  const { loading, serverError, fetchData } = useFetch(
+    ProductService.getProducts,
+    errorContext.product
+  )
 
-        // Mock product data
-        setProducts([
-          {
-            id: 1,
-            name: "Product 1",
-            description: "This is product 1 description",
-            price: "$10.00",
-          },
-          // ...other products
-        ]);
-
-        // Mock user info
-        setUserInfo({
-          email: "user@example.com",
-          username: "username",
-          // Additional mock user info
-        });
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  // Function to handle the update of user info
-  const handleUserInfoChange = (e) => {
-    const { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]: value });
-  };
-
-  // Function to submit updated user info
-  const submitUserInfo = () => {
-    // Submit the new user info to the server
-    console.log("Updated user info:", userInfo);
-    dispatch(setAlert({ type: "success", message: "User info updated successfully" }));
-    
-    
-    // You would replace the above line with your actual API call
-  };
+useEffect(() => {
+  
+})
+  
 
   return (
     <div className="container mx-auto p-6">
@@ -79,7 +39,6 @@ const DashboardPage = () => {
               <h3 className="text-xl font-semibold">{product.name}</h3>
               <p className="text-gray-600">{product.description}</p>
               <p className="text-gray-800 font-bold">{product.price}</p>
-              {/* Add more product details here */}
             </div>
           ))}
         </div>
