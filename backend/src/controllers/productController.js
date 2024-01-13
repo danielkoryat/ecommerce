@@ -22,7 +22,7 @@ export const deleteProduct = asyncWrapper(async (req, res) => {
   await ProductService.deleteProduct(receivedId);
   res
     .status(200)
-    .json({ success: true, message: "Product deleted successfully" });
+    .json({ receivedId });
 });
 
 export const getProducts = asyncWrapper(async (req, res) => {
@@ -31,15 +31,29 @@ export const getProducts = asyncWrapper(async (req, res) => {
   const limit = 10;
 
   if (Number.isNaN(page)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Page number is required and must be greater than 0" });
+    return res.status(400).json({
+      success: false,
+      message: "Page number is required and must be greater than 0",
+    });
   }
-  const { products, hasMore } = await ProductService.getProducts(page, limit, categoryFilter);
+  const { products, hasMore } = await ProductService.getProducts(
+    page,
+    limit,
+    categoryFilter
+  );
 
   return res.status(200).json({
     success: true,
     products,
-    hasMore, 
+    hasMore,
   });
 });
+
+export const getUsersProducts = asyncWrapper(async (req, res) => {
+  const userid = req.user._id;
+  const products = await ProductService.getUsersProducts(userid);
+  res.status(200).json(products);
+});
+
+
+

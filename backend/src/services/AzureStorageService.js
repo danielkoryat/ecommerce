@@ -16,7 +16,7 @@ export const uploadImagesToAzure = async (
     blobServiceClient.getContainerClient(recivedContainerName);
 
   let uploadPromises = images.map(async (image, index) => {
-    const blobName = `products/${Date.now()}-${image.originalname}-${index}`;
+    const blobName = `products/${Date.now()}-${image.originalname}-${index}`; 
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     const uploadBlobResponse = await blockBlobClient.upload(
       image.buffer,
@@ -38,18 +38,21 @@ export const deleteImagesFromAzure = async (imageUrls) => {
     AZURE_STORAGE_CONNECTION_STRING
   );
   const containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
+
   let deletePromises = imageUrls.map(async (imageUrl) => {
-    const url = new URL(imageUrl);
-    const pathname = url.pathname;
-    const containerName = 'ecommarceimages/'; 
-    const blobName = pathname.includes(containerName) ? pathname.split(containerName)[1] : null;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-    const deleteBlobResponse = await blockBlobClient.deleteIfExists();
-    if (deleteBlobResponse.errorCode) {
-      throw new Error(
-        `Failed to delete image: ${deleteBlobResponse.errorCode}`
-      );
+    try {
+      const url = new URL(imageUrl);
+      const pathname = url.pathname;
+      const blobName = decodeURIComponent(pathname).replace(/^\/ecommarceimages\//, '');
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+      await blockBlobClient.deleteIfExists();
+
+    } catch (error) {
+      // Log error or rethrow with additional information
+      console.error(`Failed to delete image ${imageUrl}: ${error.message}`);
+      throw new Error(`Failed to delete image: ${error.message}`);
     }
   });
+
   return Promise.all(deletePromises);
 };

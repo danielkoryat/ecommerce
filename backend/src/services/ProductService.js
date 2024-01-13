@@ -79,6 +79,11 @@ class ProductService {
     await deleteImagesFromAzure(product.imageUrls);
     await Product.deleteOne({ _id: id });
   }
+
+  async getUsersProducts(id) {
+    const products = await Product.find({ seller: id });
+    return products;
+  }
 }
 
 export default new ProductService();
