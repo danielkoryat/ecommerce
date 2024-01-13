@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useWatchlist from "../hooks/useWatchlist";
 import { useSelector } from "react-redux";
@@ -21,6 +21,7 @@ const ProductCard = React.memo(
     product: { _id, imageUrls, name, price, description, seller },
     isAuthenticated,
     onDelete,
+    isSmall,
   }) => {
     const navigate = useNavigate();
     const {
@@ -61,7 +62,11 @@ const ProductCard = React.memo(
     };
 
     return (
-      <Card className="w-96 flex flex-col">
+      <Card
+        className={`transform ${
+          isSmall ? "scale-75 -m-12" : "scale-100"
+        } flex flex-col`}
+      >
         <CardHeader shadow={false} floated={false} className="h-96">
           <img
             src={imageUrl}

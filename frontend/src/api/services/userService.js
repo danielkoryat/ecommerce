@@ -32,6 +32,8 @@ class UserService {
     const response = await apiClient.post("/user/logout");
     return response.data;
   }
+
+ 
 }
 
 export default new UserService();

@@ -24,6 +24,11 @@ class ProductService {
     const { data } = await apiClient.delete(`/product/${id}`);
     return data;
   }
+
+  async getUserProducts () {
+    const response = await apiClient.get("/user/products");
+    return response.data;
+  }
 }
 
 export default new ProductService();
