@@ -13,7 +13,7 @@ import Register from "./pages/RegisterPage.jsx";
 import CreateProductPage from "./pages/CreateProductPage.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
+import DashboardPage from "./pages/DashboardPage/DashboardPageContainer.jsx"
 import WatchlistPage from "./pages/WatchlistPage.jsx";
 import ProductPage from "./pages/ProductPage/PageContainer.jsx";
 import Alert from "./components/Alert.jsx";

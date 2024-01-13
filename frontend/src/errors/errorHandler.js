@@ -56,6 +56,7 @@ export const errorContext = {
   
     switch (status) {
       case HTTP_STATUS.BAD_REQUEST:
+    //TODO - implament custome errors for login and registrations
     if (context === errorContext.login) return getContextualMessage(context, "Invalid email or password.");
         return getContextualMessage(context, "Invalid request. Please check your input.");
   
