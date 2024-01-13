@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
+
 const UserStatsSection = ({ products }) => {
+  const watchlist = useSelector((state) => state.watchlist.items);
+
   const sumProductWorth = (products) => {
     let total = 0;
     products.forEach((product) => {
@@ -16,6 +20,7 @@ const UserStatsSection = ({ products }) => {
           title="Total Products Worth"
           value={sumProductWorth(products) + "$"}
         />
+        <Stat title="Items In Watchlist" value={watchlist.length} />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Spinner } from "@material-tailwind/react";
 import ProductsSection from "./PruducsSections";
 import UserInfoSection from "./UserInfoSection";
 import UserStatsSection from "./UserStatsSection";
+import ErrorNotification from "../../components/ErrorNotification";
 import ProductService from "../../api/services/ProductService";
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -26,24 +27,26 @@ const DashboardPage = () => {
     };
 
     getProducts();
-  },[user.id]);
+  }, [user.id]);
 
-  return (
+  return loadingProducts ? (
+    <Spinner />
+  ) : serverError ? (
+    <ErrorNotification
+      title="server error accessing products"
+      message={serverError}
+    />
+  ) : (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8" style={{ color: "green" }}>
         Dashboard
       </h1>
-      {loadingProducts ? (
-        <Spinner />
-      ) : serverError ? (
-        <p>{serverError}</p>
-      ) : (
-        <ProductsSection
-          products={products}
-          isAuthenticated={user.isAuthenticated}
-          setProducts={setProducts}
-        />
-      )}
+      <p>{serverError}</p>
+      <ProductsSection
+        products={products}
+        isAuthenticated={user.isAuthenticated}
+        setProducts={setProducts}
+      />
       <UserInfoSection userInfo={user} />
       <UserStatsSection products={products} />
     </div>

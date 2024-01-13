@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import { logoutUserAsync } from "../../app/thunks/userThunks.js";
 
 const NavBarContainer = () => {
-  //TODO - add logo
+  //TODO - add logo,improve mobile menu and clean up the code
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, username } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -50,7 +50,6 @@ const NavBarContainer = () => {
             className="text-xl leading-none px-2 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
             type="button"
           >
-            {/* Hamburger icon */}
             <svg
               className={`w-6 h-6 transition-transform duration-500 ${
                 isMobileMenuOpen ? "transform rotate-90" : ""
