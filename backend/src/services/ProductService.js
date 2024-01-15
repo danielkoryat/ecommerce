@@ -84,6 +84,11 @@ class ProductService {
     const products = await Product.find({ seller: id });
     return products;
   }
+
+  async searchProductByName(name) {
+    const products = await Product.find({ name: { $regex: name, $options: "i" } });
+    return products;
+  }
 }
 
 export default new ProductService();
