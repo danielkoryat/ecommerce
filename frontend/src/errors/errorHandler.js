@@ -5,6 +5,9 @@ export const errorContext = {
     product: "product",
     review: "review",
     watchlist: "watchlist",
+    dashboard: "dashboard",
+    editProfile: "editProfile",
+    search: "search",
   };
   
   const HTTP_STATUS = {

@@ -56,7 +56,7 @@ const ReviewSection = ({ productId,isAuthenticated }) => {
         ))
       ) : (
         <p className="text-lg font-semibold text-gray-700 bg-gray-100 rounded-md p-4 shadow">
-          No reviews yet, be the first one.
+          No reviews yet.
         </p>
       )}
 

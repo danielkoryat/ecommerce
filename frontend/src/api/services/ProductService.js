@@ -29,6 +29,11 @@ class ProductService {
     const response = await apiClient.get("/user/products");
     return response.data;
   }
+
+  async searchProductByName(name) {
+    const response = await apiClient.get(`/product/search?name=${name}`);
+    return response.data;
+  }
 }
 
 export default new ProductService();

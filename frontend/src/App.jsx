@@ -13,6 +13,7 @@ import Register from "./pages/RegisterPage.jsx";
 import CreateProductPage from "./pages/CreateProductPage.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPageContainer.jsx"
 import WatchlistPage from "./pages/WatchlistPage.jsx";
 import ProductPage from "./pages/ProductPage/PageContainer.jsx";
@@ -51,6 +52,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/products/:productId" element={<ProductPage />} />
           <Route element={<PrivateRoute />}>
             {privateRoutes.map((route, index) => (

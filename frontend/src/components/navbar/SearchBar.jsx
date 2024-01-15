@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { Button, Input } from "@material-tailwind/react";
-import { useDispatch } from "react-redux";
-import { setAlert } from "../../app/alertSlice";
+import { useNavigate } from "react-router-dom";
+
 
 const SearchBar = () => {
-  const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
-  const handleSearch = (event) => {
+
+  const handleSearch = async(event) => {
     event.preventDefault();
+    if (searchValue) {
+      navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+      setSearchValue("");
+    }
+
+   
   };
 
   return (
@@ -24,13 +31,13 @@ const SearchBar = () => {
             autoComplete="off"
             label="Search"
             onChange={(e) => setSearchValue(e.target.value)}
+            value={searchValue}
           />
           <Button
             type="submit"
             size="sm"
             className="ml-2"
             color="green"
-            loading={false}
           >
             Search
           </Button>
