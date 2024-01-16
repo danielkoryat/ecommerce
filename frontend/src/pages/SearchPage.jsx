@@ -30,24 +30,27 @@ const SearchPage = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8" style={{ color: "green" }}>
-        Search Results
-      </h1>
-      {loading ? (
-        <Spinner />
-      ) : products.length > 0 ? (
-        products.map((product) => (
+    <h1 className="text-3xl font-bold mb-8" style={{ color: "green" }}>
+      Search Results
+    </h1>
+    {loading ? (
+      <Spinner />
+    ) : products.length > 0 ? (
+      <>
+        <p>Found {products.length} products</p>
+        {products.map((product) => (
           <ProductCard key={product._id} product={product} />
-        ))
-      ) : serverError ? (
-        <ErrorNotification title="Server Error" message={serverError} />
-      ) : (
-        <ErrorNotification
-          title={"No products found"}
-          message="Try searching for something else"
-        />
-      )}
-    </div>
+        ))}
+      </>
+    ) : serverError ? (
+      <ErrorNotification title="Server Error" message={serverError} />
+    ) : (
+      <ErrorNotification
+        title={"No products found"}
+        message="Try searching for something else"
+      />
+    )}
+  </div>
   );
 };
 

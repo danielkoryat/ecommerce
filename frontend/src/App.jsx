@@ -16,7 +16,7 @@ import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPageContainer.jsx"
 import WatchlistPage from "./pages/WatchlistPage.jsx";
-import ProductPage from "./pages/ProductPage/PageContainer.jsx";
+import ProductPage from "./pages/ProductPage/ProductPageContainer.jsx";
 import Alert from "./components/Alert.jsx";
 import "./App.css";
 

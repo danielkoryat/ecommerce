@@ -7,7 +7,8 @@ import usefetch from "../hooks/useFetch";
 import { useSelector } from "react-redux";
 import TextAreaField from "../components/TextAreaField";
 import InputField from "../components/InputField";
-import { Button, Typography } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
+import useAlert from "../hooks/useAlert";
 
 export default function CreateProductPage() {
   const [successMessage, setSuccessMessage] = useState(null);
@@ -17,6 +18,7 @@ export default function CreateProductPage() {
     productService.createProduct,
     errorContext.product
   );
+  const setAlert = useAlert();
 
   const handleCategoryChange = (selectedOptions) => {
     setSelectedCategories(selectedOptions);
@@ -57,6 +59,12 @@ export default function CreateProductPage() {
       clearServerError();
     }
   };
+
+  if (successMessage) {
+    setAlert("success", successMessage);
+    setSuccessMessage(null);
+  }
+  
 
   return (
     <>
@@ -157,7 +165,6 @@ export default function CreateProductPage() {
           </div>
           {/* Error Message */}
           {serverError && <p className="text-red-500">{serverError}</p>}
-          {successMessage && <p className="text-green-500">{successMessage}</p>}
         </form>
       </div>
     </>

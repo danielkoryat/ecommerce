@@ -1,14 +1,9 @@
 import React from "react";
-import Spinner from "../../components/Spinner";
-import useFetch from "../../hooks/useFetch";
-import { errorContext } from "../../errors/errorHandler";
-import watchlistService from "../../api/services/WatchlistService";
-import { setAlert } from "../../app/alertSlice";
 import { useDispatch } from "react-redux";
 import ErrorNotification from "../../components/ErrorNotification";
-import defoultProductImage from "../../assets/images/default-product-image.png";
+import defaultProductImage from "../../assets/images/default-product-image.png";
 import { Button } from "@material-tailwind/react";
-
+import useWatchlist from "../../hooks/useWatchlist";
 
 const ProductDisplay = ({
   product,
@@ -18,48 +13,37 @@ const ProductDisplay = ({
   deleteLoading,
   deleteError,
   isSeller,
-  pathToDefaultImage,
   isAuthenticated,
 }) => {
   const dispatch = useDispatch();
   const {
-    fetchData: addToWatchlist,
-    loading: addToWatchlistLoading,
-    serverError: addToWatchlistServerError,
-  } = useFetch(watchlistService.addProductToWatchlist, errorContext.watchlist);
+    isInWatchlist,
+    addToWatchlist,
+    removeFromWatchlist,
+    loading: watchlistLoading,
+    error: watchlistError,
+  } = useWatchlist(product?._id);
 
-  const handleAddToWatchlist = async () => {
-    const data = await addToWatchlist(product._id);
-    if (!data) {
-      dispatch(setAlert({ type: "error", message: addToWatchlistServerError }));
-    } else {
-      dispatch(
-        setAlert({ type: "success", message: "Product added to watchlist" })
-      );
-    }
-  };
+  if (!product) {
+    return (
+      <ErrorNotification
+        title="Product not found"
+        message="This product could not be found, if you believe this is an error, please contact us"
+      />
+    );
+  }
 
-  const removeProductFromWatchlist = async () => {
-    // TODO: Remove product from watchlist
-  };
+  const imageUrl = product.imageUrls[0] || defaultProductImage; 
+  const categories = product.categories
+    .map((category) => category.name)
+    .join(", ");
 
-  return !product ? (
-    <ErrorNotification
-      title={"Product not found"}
-      message={
-        "This product could not be found, if you believe this is an error, please contact us"
-      }
-    />
-  ) : (
+  return (
     <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/2">
           <img
-            src={
-              product.imageUrls[0]
-                ? product.imageUrls[0]
-                : defoultProductImage
-            }
+            src={imageUrl}
             alt={product.name}
             className="rounded-lg mb-4 md:mb-0 max-w-xs"
           />
@@ -83,9 +67,7 @@ const ProductDisplay = ({
           </p>
           <p className="mb-4">
             <span className="text-gray-800 font-semibold">Categories:</span>
-            <span className="text-blue-500 ml-2">
-              {product.categories.map((category) => category.name).join(", ")}
-            </span>
+            <span className="text-blue-500 ml-2">{categories}</span>
           </p>
           <p className="text-gray-600 text-sm mb-4">
             Posted At: {new Date(product.createdAt).toLocaleDateString()}
@@ -96,32 +78,28 @@ const ProductDisplay = ({
       <div className="flex flex-col md:flex-row justify-between items-center mt-4 md:mt-8">
         {isSeller && (
           <div className="flex space-x-2">
-            <button
+            <Button
               onClick={() => setIsEditing(!isEditing)}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
             >
               {isEditing ? "Hide" : "Edit"}
-            </button>
-            <Button
-              onClick={handleDelete}
-              color="yellow"
-              loading={addToWatchlistLoading}
-            >
+            </Button>
+            <Button onClick={handleDelete} color="yellow">
               Delete
             </Button>
           </div>
         )}
-        {isAuthenticated && (
-          <button
-            onClick={handleAddToWatchlist}
-            className="bg-yellow-500 text-white px-4 py-2 rounded mt-4 md:mt-0 hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-opacity-50"
+        {isAuthenticated && !isSeller && (
+          <Button
+            onClick={isInWatchlist ? removeFromWatchlist : addToWatchlist }
+            color={isInWatchlist ? "yellow" : "green"}
+            loading={watchlistLoading}
+            className="w-full md:w-auto"
           >
-            Add to Watchlist
-          </button>
+            {isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+          </Button>
         )}
-        {deleteError && (
-          <p className="text-red-500 mt-2 md:mt-0">{deleteError}</p>
-        )}
+        
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const UserInfoSection = ({ userInfo: { email, username } }) => {
     }
     
     const submitUserInfo = () => {
-      // Handle user info submission here
+      // TODO implement user info submission
       console.log(userInfo);
     }
 

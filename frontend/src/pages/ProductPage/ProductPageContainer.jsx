@@ -12,7 +12,7 @@ import { setAlert } from "../../app/alertSlice";
 import ProductDisplay from "./ProductDisplay";
 
 
-const ProductPage = () => {
+const ProductPageContainer = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -73,4 +73,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductPageContainer;
