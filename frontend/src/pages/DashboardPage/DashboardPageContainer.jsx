@@ -33,7 +33,7 @@ const DashboardPage = () => {
     <Spinner />
   ) : serverError ? (
     <ErrorNotification
-      title="server error accessing products"
+      title="server error"
       message={serverError}
     />
   ) : (

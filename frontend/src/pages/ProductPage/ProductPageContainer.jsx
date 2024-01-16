@@ -8,14 +8,15 @@ import Spinner from "../../components/Spinner";
 import CommentsSection from "./ReviewSection";
 import EditProductComponent from "./EditProduct";
 import { useSelector, useDispatch } from "react-redux";
-import { setAlert } from "../../app/alertSlice";
 import ProductDisplay from "./ProductDisplay";
-
+import useAlert from "../../hooks/useAlert";
 
 const ProductPageContainer = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const  setAlert  = useAlert();
+
   
   const { id, isAuthenticated } = useSelector((state) => state.user);
   const [product, setProduct] = useState(null);
@@ -45,10 +46,11 @@ const ProductPageContainer = () => {
   const handleDelete = async () => {
     const data = await deleteProduct(productId);
     if (!data) {
-      dispatch(setAlert({ type: "error", message: deleteError.message }));
+      setAlert({ type: "error", message: deleteError.message });
+
     } else {
       navigate("/shop");
-      dispatch(setAlert({ type: "success", message: "Product deleted successfully" }));
+      setAlert({ type: "success", message: "Product deleted successfully" });
     }
   };
 
@@ -74,3 +76,5 @@ const ProductPageContainer = () => {
 };
 
 export default ProductPageContainer;
+
+
