@@ -4,13 +4,12 @@ import { generateAccessTokenFromRefreshToken } from "../utils/authUtils.js";
 
 const cookieJwtAuth = (req, res, next) => {
   try {
-    //TODO fix the refresh token auth
     const token = req.cookies.accessToken;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
     next();
   } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
+    if (req.cookies.refreshToken) {
       generateAccessTokenFromRefreshToken(req, res, next);
     } else {
       res.clearCookie("token");
