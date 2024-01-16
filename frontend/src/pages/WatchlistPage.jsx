@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import ProductCard from "../components/ProductCard.jsx";
+import ProductCard from "../components/shared/ProductCard.jsx";
 import { useSelector } from "react-redux";
-import ErrorNotification from "../components/ErrorNotification.jsx";
-
+import useDocumentTitle from "../hooks/useDocumantTitle.js";
 const WatchlistPage = () => {
   const watchlistItems = useSelector((state) => state.watchlist.items);
+  useDocumentTitle("My Watchlist");
 
   return (
     <div className="container mx-auto p-6">

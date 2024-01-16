@@ -4,9 +4,10 @@ import { useSelector } from "react-redux";
 import useFetch from "../hooks/useFetch";
 import ProductService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
-import ProductCard from "../components/ProductCard";
-import ErrorNotification from "../components/ErrorNotification";
-import Spinner from "../components/spinner";
+import ProductCard from "../components/shared/ProductCard";
+import ErrorNotification from "../components/shared/ErrorNotification";
+import Spinner from "../components/shared/spinner";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 const ShopPage = () => {
   const categories = useSelector((state) => state.category.categories);
@@ -20,6 +21,7 @@ const ShopPage = () => {
     ProductService.getProducts,
     errorContext.product
   );
+  useDocumentTitle("Shop");
 
   useEffect(() => {
     const getProductsDetails = async () => {

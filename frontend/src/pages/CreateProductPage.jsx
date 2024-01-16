@@ -5,10 +5,11 @@ import productService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
 import usefetch from "../hooks/useFetch";
 import { useSelector } from "react-redux";
-import TextAreaField from "../components/TextAreaField";
-import InputField from "../components/InputField";
+import TextAreaField from "../components/shared/TextAreaField";
+import InputField from "../components/shared/InputField";
 import { Button } from "@material-tailwind/react";
 import useAlert from "../hooks/useAlert";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 export default function CreateProductPage() {
   const [successMessage, setSuccessMessage] = useState(null);
@@ -19,6 +20,7 @@ export default function CreateProductPage() {
     errorContext.product
   );
   const setAlert = useAlert();
+  useDocumentTitle("Sell A Product");
 
   const handleCategoryChange = (selectedOptions) => {
     setSelectedCategories(selectedOptions);

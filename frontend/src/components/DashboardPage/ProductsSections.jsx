@@ -1,4 +1,5 @@
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../shared/ProductCard";
+
 const ProductsSection = ({ products,setProducts, isAuthenticated }) => {
 
   const handleProductDelete = (productId) => {

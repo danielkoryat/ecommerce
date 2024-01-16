@@ -1,8 +1,10 @@
 import React from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "@material-tailwind/react";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 const HomePage = () => {
+  useDocumentTitle("Home");
   return (
     <div>
       {/* Carousel */}
@@ -57,7 +59,6 @@ const HomePage = () => {
       {/* Features section */}
       <section className="bg-gray-100 py-12">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* TODO: Replace with actual features */}
           <FeatureCard
             icon="🚚"
             title="Free Shipping"

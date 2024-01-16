@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearAlert } from "../app/alertSlice";
+import { clearAlert } from "../../app/alertSlice";
 import PropTypes from "prop-types";
 import { Alert as AlertComponent } from "@material-tailwind/react";
 

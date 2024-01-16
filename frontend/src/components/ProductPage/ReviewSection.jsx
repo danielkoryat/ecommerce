@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import useFetch from "../../hooks/useFetch";
-import reviewService from "../../api/services/ReviewService";
-import { errorContext } from "../../errors/errorHandler";
-import Review from "../../components/Review";
-import StarRating from "../../components/StartRating.jsx";
-import Spinner from "../../components/Spinner";
+import useFetch from "../../hooks/useFetch.js";
+import reviewService from "../../api/services/ReviewService.js";
+import { errorContext } from "../../errors/errorHandler.js";
+import Review from "../shared/Review.jsx";
+import StarRating from "../shared/StartRating.jsx";
+import Spinner from "../shared/spinner.jsx";
 
 const ReviewSection = ({ productId,isAuthenticated }) => {
   const [reviews, setReviews] = useState([]);

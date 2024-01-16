@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { createUserAsync } from "../app/thunks/userThunks.js";
 import { resetServerError } from "../app/userSlice.js";
 import { Button } from "@material-tailwind/react";
+import useDocumentTitle from "../hooks/useDocumantTitle.js";
 
 const RegisterPage = () => {
   const loading = useSelector((state) => state.user.loading);
   const serverError = useSelector((state) => state.user.serverError);
   const dispatch = useDispatch();
+  useDocumentTitle("Register");
 
   useEffect(() => {
     dispatch(resetServerError());

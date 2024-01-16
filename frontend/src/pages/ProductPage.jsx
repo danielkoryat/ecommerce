@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
-import ProductService from "../../api/services/ProductService";
-import { errorContext } from "../../errors/errorHandler";
-import ErrorNotification from "../../components/ErrorNotification";
-import Spinner from "../../components/Spinner";
-import CommentsSection from "./ReviewSection";
-import EditProductComponent from "./EditProduct";
+import useFetch from "../hooks/useFetch";
+import ProductService from "../api/services/ProductService";
+import { errorContext } from "../errors/errorHandler";
+import ErrorNotification from "../components/shared/ErrorNotification";
+import Spinner from "../components/shared/spinner";
+import CommentsSection from "../components/ProductPage/ReviewSection";
+import EditProductComponent from "../components/ProductPage/EditProduct";
 import { useSelector, useDispatch } from "react-redux";
-import ProductDisplay from "./ProductDisplay";
-import useAlert from "../../hooks/useAlert";
+import ProductDisplay from "../components/ProductPage/ProductDisplay";
+import useAlert from "../hooks/useAlert";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 const ProductPageContainer = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const  setAlert  = useAlert();
-
+  
   
   const { id, isAuthenticated } = useSelector((state) => state.user);
   const [product, setProduct] = useState(null);
+  useDocumentTitle(`Product | ${product?.name || "Product"}`);
   const [isEditing, setIsEditing] = useState(false);
 
   const { loading, fetchData } = useFetch(

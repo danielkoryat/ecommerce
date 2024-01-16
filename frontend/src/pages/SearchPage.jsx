@@ -3,14 +3,16 @@ import { errorContext } from "../errors/errorHandler";
 import ProductService from "../api/services/ProductService";
 import useFetch from "../hooks/useFetch";
 import { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
-import Spinner from "../components/spinner";
-import ErrorNotification from "../components/ErrorNotification";
+import ProductCard from "../components/shared/ProductCard";
+import Spinner from "../components/shared/spinner";
+import ErrorNotification from "../components/shared/ErrorNotification";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 const SearchPage = () => {
   const query = useQuery();
   const searchValue = query.get("query");
   const [products, setProducts] = useState([]);
+  useDocumentTitle(`Search | ${searchValue}`);
 
   const {
     fetchData: searchProducts,

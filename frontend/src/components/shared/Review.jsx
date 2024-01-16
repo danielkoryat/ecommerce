@@ -1,5 +1,5 @@
 import React from 'react';
-import StarRating from '../components/StartRating.jsx';
+import StarRating from './StartRating';
 
 const Review = ({ username, comment, rating }) => {
   return (

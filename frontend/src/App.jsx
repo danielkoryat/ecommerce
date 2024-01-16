@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { fetchCategories } from "./app/categorySlice";
 import { fetchWatchlistAsync } from "./app/thunks/watchlistThunks.js";
 import Navbar from "./components/navbar/NavBarContainer.jsx";
-import Footer from "./components/Footer.jsx";
+import Footer from "./components/shared/Footer.jsx";
 import Home from "./pages/HomePage.jsx";
 import Shop from "./pages/ShopPage.jsx";
 import AboutUs from "./pages/AboutUsPage.jsx";
@@ -14,10 +14,11 @@ import CreateProductPage from "./pages/CreateProductPage.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
 import PublicOnlyRoute from "./routes/PublicRoute.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
-import DashboardPage from "./pages/DashboardPage/DashboardPageContainer.jsx"
+import DashboardPage from "./pages/DashboardPage.jsx";
 import WatchlistPage from "./pages/WatchlistPage.jsx";
-import ProductPage from "./pages/ProductPage/ProductPageContainer.jsx";
-import Alert from "./components/Alert.jsx";
+import ProductPage from "./pages/ProductPage.jsx";
+import Alert from "./components/shared/Alert.jsx";
+
 import "./App.css";
 
 function App() {

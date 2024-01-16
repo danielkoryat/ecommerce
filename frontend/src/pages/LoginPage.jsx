@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Spinner from "../components/spinner";
+import Spinner from "../components/shared/spinner.jsx";
 import { loginUserAsync } from "../app/thunks/userThunks.js";
 import { useSelector, useDispatch } from "react-redux";
 import { resetServerError } from "../app/userSlice.js";
 import { Button } from "@material-tailwind/react";
+import useDocumentTitle from "../hooks/useDocumantTitle.js";
 
 
 
@@ -12,6 +13,7 @@ import { Button } from "@material-tailwind/react";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const {loading, serverError} = useSelector((state) => state.user);
+  useDocumentTitle("Login");
 
   useEffect(() => {
     dispatch(resetServerError());

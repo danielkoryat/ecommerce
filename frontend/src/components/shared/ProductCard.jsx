@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useWatchlist from "../hooks/useWatchlist";
+import useWatchlist from "../../hooks/useWatchlist";
 import { useSelector } from "react-redux";
-import useFetch from "../hooks/useFetch";
-import ProductService from "../api/services/ProductService";
-import { errorContext } from "../errors/errorHandler";
+import useFetch from "../../hooks/useFetch";
+import ProductService from "../../api/services/ProductService";
+import { errorContext } from "../../errors/errorHandler";
 import {
   Card,
   CardHeader,
@@ -13,8 +13,8 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import defaultProductImage from "../assets/images/default-product-image.png";
-import useAlert from "../hooks/useAlert";
+import defaultProductImage from "../../assets/images/default-product-image.png";
+import useAlert from "../../hooks/useAlert";
 
 const ProductCard = React.memo(
   ({

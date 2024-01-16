@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import ErrorNotification from "../../components/ErrorNotification";
+import ErrorNotification from "../shared/ErrorNotification";
 import defaultProductImage from "../../assets/images/default-product-image.png";
 import { Button } from "@material-tailwind/react";
 import useWatchlist from "../../hooks/useWatchlist";

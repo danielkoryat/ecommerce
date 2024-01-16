@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { errorContext } from "../../errors/errorHandler";
-import useFetch from "../../hooks/useFetch";
+import { errorContext } from "../errors/errorHandler";
+import useFetch from "../hooks/useFetch";
 import { Spinner } from "@material-tailwind/react";
-import ProductsSection from "./PruducsSections";
-import UserInfoSection from "./UserInfoSection";
-import UserStatsSection from "./UserStatsSection";
-import ErrorNotification from "../../components/ErrorNotification";
-import ProductService from "../../api/services/ProductService";
+import ProductsSection from "../components/DashboardPage/ProductsSections";
+import UserInfoSection from "../components/DashboardPage/UserInfoSection";
+import UserStatsSection from "../components/DashboardPage/UserStatsSection";
+import ErrorNotification from "../components/shared/ErrorNotification";
+import ProductService from "../api/services/ProductService";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -20,6 +21,7 @@ const DashboardPage = () => {
     fetchData: fetchUserProducts,
   } = useFetch(ProductService.getUserProducts, errorContext.product);
 
+  useDocumentTitle(`Dashboard | ${user.username}`);
   useEffect(() => {
     const getProducts = async () => {
       const data = await fetchUserProducts();

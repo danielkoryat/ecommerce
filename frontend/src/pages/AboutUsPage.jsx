@@ -1,6 +1,9 @@
 import React from "react";
+import useDocumentTitle from "../hooks/useDocumantTitle";
 
 const AboutUsPage = () => {
+  useDocumentTitle("About Us");
+  
   return (
     <div className="bg-white">
       {/* Hero Section */}
