@@ -59,7 +59,15 @@ export const searchProductByName = asyncWrapper(async (req, res) => {
   const name = req.query.name;
   const products = await ProductService.searchProductByName(name);
   res.status(200).json(products);
+});
+
+export const getRecentProducts = asyncWrapper(async (req, res) => {
+  const numberOfPorducts = req.query.numberOfProducts;
+  const products = await ProductService.getRecentProducts(numberOfPorducts);
+  res.status(200).json(products);
 })
+
+
 
 
 

@@ -89,6 +89,11 @@ class ProductService {
     const products = await Product.find({ name: { $regex: name, $options: "i" } });
     return products;
   }
+
+  async getRecentProducts(numberOfPorducts) {
+    const products = await Product.find({}).sort({ createdAt: -1 }).limit(numberOfPorducts);
+    return products;
+  }
 }
 
 export default new ProductService();
