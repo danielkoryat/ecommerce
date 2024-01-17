@@ -2,14 +2,41 @@ import React from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "@material-tailwind/react";
 import useDocumentTitle from "../hooks/useDocumantTitle";
+import { useEffect, useState } from "react";
+import useFetch from "../hooks/useFetch";
+import ProductService from "../api/services/ProductService";
+import { errorContext } from "../errors/errorHandler";
+import Spinner from "../components/shared/Spinner";
+import defoultProductImage from "../assets/images/default-product-image.png";
+import ProductCard from "../components/shared/ProductCard";
 
 const HomePage = () => {
   useDocumentTitle("Home");
+  const [products, setProducts] = useState([]);
+  const {
+    fetchData: fetchProducts,
+    serverError,
+    loading,
+  } = useFetch(ProductService.getRecentProducts, errorContext.product);
+  const numberOfProducts = 3;
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      const data = await fetchProducts(numberOfProducts);
+      if (Array.isArray(data)) {
+        setProducts(data);
+      }
+    };
+    fetchPageData();
+  }, []);
   return (
     <div>
       {/* Carousel */}
       <section>
-        <Carousel transition={{ duration: 0.5 }} className="rounded-xs  h-64 mx-auto">
+        <Carousel
+          transition={{ duration: 0.5 }}
+          className="rounded-xs  h-64 mx-auto"
+        >
           <img
             src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80"
             alt="image 1"
@@ -38,22 +65,28 @@ const HomePage = () => {
         </p>
       </section>
 
-      {/* Categories section */}
+      {/* Products section */}
       <section className="container mx-auto py-12">
-        <h3 className="text-3xl font-bold text-center text-gray-800">
-          Shop by Category
-        </h3>
-        <div className="flex flex-wrap justify-center gap-4 mt-8">
-          {/* TODO: Replace with actual categories and links */}
-          <CategoryCard
-            title="Electronics"
-            imageUrl="https://www.parkerpawn.com/wp-content/uploads/2023/08/electronic-gadgets.jpeg"
-          />
-          <CategoryCard
-            title="Home & Garden"
-            imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEM8oHy-0gFKhYuYxK4tRf20-RryVPdquWOA&usqp=CAU"
-          />
-        </div>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <h3 className="text-3xl font-bold text-center text-gray-800">
+              Our Leading Products
+            </h3>
+            {serverError ? (
+              <p className="text-center text-red-500">{serverError}</p>
+            ) : products.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} isSmall/>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-600">No products found</p>
+            )}
+          </>
+        )}
       </section>
 
       {/* Features section */}
@@ -80,17 +113,8 @@ const HomePage = () => {
   );
 };
 
-// CategoryCard component placeholder
-const CategoryCard = ({ title, imageUrl }) => (
-  <div className="max-w-sm rounded overflow-hidden shadow-lg">
-    <img className="w-full" src={imageUrl} alt={title} />
-    <div className="px-6 py-4">
-      <div className="font-bold text xl text-center">{title}</div>
-    </div>
-  </div>
-);
 
-// FeatureCard component placeholder
+
 const FeatureCard = ({ icon, title, description }) => (
   <div className="text-center p-4">
     <span className="text-6xl">{icon}</span>

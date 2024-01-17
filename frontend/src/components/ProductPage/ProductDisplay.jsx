@@ -32,7 +32,7 @@ const ProductDisplay = ({
       />
     );
   }
-
+//TODO implament a carusal
   const imageUrl = product.imageUrls[0] || defaultProductImage; 
   const categories = product.categories
     .map((category) => category.name)

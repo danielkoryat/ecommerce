@@ -31,8 +31,13 @@ class ProductService {
   }
 
   async searchProductByName(name) {
-    const response = await apiClient.get(`/product/search?name=${name}`);
-    return response.data;
+    const { data } = await apiClient.get(`/product/search?name=${name}`);
+    return data;
+  }
+
+  async getRecentProducts(numberOfProducts) {
+    const { data } = await apiClient.get(`/product/recent?numberOfProducts=${numberOfProducts}`);
+    return data;
   }
 }
 

@@ -6,7 +6,6 @@ const Review = ({ username, comment, rating }) => {
     <div className="bg-gray-100 p-4 rounded-lg shadow space-y-2">
       <div className="flex items-center space-x-2">
         <p className="font-semibold">{username}</p>
-        {/* Display the StarRating component */}
         <div className="flex items-center">
         <StarRating rating={rating} onRating={() => {}} isDisabled={true} />
         </div>
