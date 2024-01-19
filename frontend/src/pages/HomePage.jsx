@@ -7,7 +7,6 @@ import useFetch from "../hooks/useFetch";
 import ProductService from "../api/services/ProductService";
 import { errorContext } from "../errors/errorHandler";
 import Spinner from "../components/shared/Spinner";
-import defoultProductImage from "../assets/images/default-product-image.png";
 import ProductCard from "../components/shared/ProductCard";
 
 const HomePage = () => {
