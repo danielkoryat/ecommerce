@@ -66,30 +66,9 @@ npm start
 
 The application should now be accessible at localhost:[PORT].
 
-## Testing
-
-Run the tests using the following command:
-
-```
-npm test
 ```
 
 ## Deployment 
 
 The application can be deployed using various hosting services. Ensure that all environment variables are configured in your hosting service.
 
-## Contributing
-
-Contributions are welcome. To contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes. 
-4. Commit your updates (`git commit -am 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`). 
-6. Create a new Pull Request.
-
-
-## Acknowledgments
-
-Thank you to all the individuals and resources that have contributed to the development of this eCommerce platform.
