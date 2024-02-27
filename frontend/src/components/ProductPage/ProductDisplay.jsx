@@ -4,11 +4,10 @@ import ErrorNotification from "../shared/ErrorNotification";
 import defaultProductImage from "../../assets/images/default-product-image.png";
 import { Button } from "@material-tailwind/react";
 import useWatchlist from "../../hooks/useWatchlist";
+import {Carousel} from "@material-tailwind/react";
 
 const ProductDisplay = ({
   product,
-  isEditing,
-  setIsEditing,
   handleDelete,
   deleteLoading,
   deleteError,
@@ -32,21 +31,41 @@ const ProductDisplay = ({
       />
     );
   }
-//TODO implament a carusal
   const imageUrl = product.imageUrls[0] || defaultProductImage; 
   const categories = product.categories
     .map((category) => category.name)
     .join(", ");
 
-  return (
-    <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-1/2">
+    const renderCarouselOrImage = () => {
+      if (product.imageUrls.length > 1) {
+        return (
+          <Carousel>
+            {product.imageUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`${product.name} ${index + 1}`}
+                className="rounded-lg mb-4 md:mb-0 max-w-xs"
+              />
+            ))}
+          </Carousel>
+        );
+      } else {
+        return (
           <img
             src={imageUrl}
             alt={product.name}
             className="rounded-lg mb-4 md:mb-0 max-w-xs"
           />
+        );
+      }
+    };
+
+  return (
+    <div className="container mx-auto my-8 p-5 bg-white shadow-xl rounded-xl">
+      <div className="flex flex-col md:flex-row">
+        <div className="md:w-1/2">
+        {renderCarouselOrImage()}
         </div>
         <div className="md:w-1/2 md:pl-8">
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
@@ -77,13 +96,7 @@ const ProductDisplay = ({
 
       <div className="flex flex-col md:flex-row justify-between items-center mt-4 md:mt-8">
         {isSeller && (
-          <div className="flex space-x-2">
-            <Button
-              onClick={() => setIsEditing(!isEditing)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-            >
-              {isEditing ? "Hide" : "Edit"}
-            </Button>
+          <div className="flex space-x-2">       
             <Button onClick={handleDelete} color="yellow">
               Delete
             </Button>

@@ -6,7 +6,6 @@ import SearchBar from "./SearchBar";
 import { logoutUserAsync } from "../../app/thunks/userThunks.js";
 
 const NavBarContainer = () => {
-  //TODO - add logo,improve mobile menu and clean up the code
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, username } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -50,23 +49,32 @@ const NavBarContainer = () => {
             type="button"
           >
             <svg
-              className={`w-6 h-6 transition-transform duration-500 ${isMobileMenuOpen ? "transform rotate-90" : ""}`}
+              className={`w-6 h-6 transition-transform duration-500 ${
+                isMobileMenuOpen ? "transform rotate-90" : ""
+              }`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
             </svg>
           </button>
-  
+
           <div className="hidden lg:flex flex-grow items-center justify-around">
             {primaryNavItems.map((item) => (
-              <NavBarTab key={item.label} to={item.to}>{item.label}</NavBarTab>
+              <NavBarTab key={item.label} to={item.to}>
+                {item.label}
+              </NavBarTab>
             ))}
             <SearchBar />
           </div>
-  
+
           <div className="hidden lg:flex items-center space-x-4">
             {authNavItems.map((item) =>
               item.label === "Logout" ? (
@@ -78,15 +86,19 @@ const NavBarContainer = () => {
                   {item.label}
                 </button>
               ) : (
-                <NavBarTab key={item.label} to={item.to}>{item.label}</NavBarTab>
+                <NavBarTab key={item.label} to={item.to}>
+                  {item.label}
+                </NavBarTab>
               )
             )}
           </div>
         </div>
       </div>
-  
+
       <div
-        className={`lg:hidden overflow-hidden transition-height duration-500 ease-in-out ${isMobileMenuOpen ? "h-auto" : "h-0"}`}
+        className={`lg:hidden overflow-hidden transition-height duration-500 ease-in-out ${
+          isMobileMenuOpen ? "h-auto" : "h-0"
+        }`}
       >
         <div className="flex flex-col space-y-2 py-4 w-full">
           <SearchBar className="w-full" />

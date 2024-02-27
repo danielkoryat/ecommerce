@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { Button } from "@material-tailwind/react";
 
-
-
 const UserInfoSection = ({ userInfo: { email, username } }) => {
-    const [userInfo, setUserInfo] = useState({ email, username });
+  const [userInfo, setUserInfo] = useState({ email, username });
 
-    const handleUserInfoChange = (event) => {
-      const { name, value } = event.target;
-      setUserInfo({ ...userInfo, [name]: value });
-    }
-    
-    const submitUserInfo = () => {
-      // TODO implement user info submission
-      console.log(userInfo);
-    }
 
   return (
     <div className="mb-6">
@@ -25,22 +14,17 @@ const UserInfoSection = ({ userInfo: { email, username } }) => {
           type="email"
           name="email"
           value={userInfo.email}
-          onChange={handleUserInfoChange}
           className="mb-4 p-2 border rounded"
+          readOnly
         />
         <label>Username:</label>
         <input
           type="text"
           name="username"
           value={userInfo.username}
-          onChange={handleUserInfoChange}
           className="mb-4 p-2 border rounded"
+          readOnly
         />
-        <Button
-          onClick={submitUserInfo}
-        >
-          Update Info
-        </Button>
       </div>
     </div>
   );

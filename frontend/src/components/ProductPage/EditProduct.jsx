@@ -11,7 +11,6 @@ const EditProductComponent = ({ product, isOpen }) => {
 
   const onSubmit = (data) => {
     console.log('Form submitted', data);
-    //TODO implamnent edit functionality and categorys
   };
 
 

@@ -11,7 +11,6 @@ import Alert from "./components/shared/Alert.jsx";
 import { privateRoutes, publicRoutes, generalRoutes } from "./routes/routes.js";
 
 import "./App.css";
-//TODO transfer the routes to a separate file
 function App() {
   const dispatch = useDispatch();
 
